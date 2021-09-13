@@ -3,6 +3,7 @@
 A listing of all weekly reports
 
 ## Weekly Report List
+
 * <http://condor-team.cslabs.clarkson.edu/reports/1.html>
 * <http://condor-team.cslabs.clarkson.edu/reports/2.html>
 * <http://condor-team.cslabs.clarkson.edu/reports/3.html>
