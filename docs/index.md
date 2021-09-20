@@ -4,4 +4,4 @@ Welcome to the Condor team website! Here is where the documentation for all of o
 
 ## Reports
 
-Weekly team reports will be located at <https://condor-team.cslabs.clarkson.edu/reports>
+Weekly team reports are located at <http://condor-team.cslabs.clarkson.edu/reports>
