@@ -1,0 +1,9 @@
+# DB connection information for Majorizer
+DB_SERVER=majorizer_db
+DB_PORT=5555
+
+# Postgres information for both Majorizer and Postgres to set up the DB
+POSTGRES_DB=majorizer
+POSTGRES_USER=majorizer
+# Fill this in yourself
+POSTGRES_PASSWORD=
