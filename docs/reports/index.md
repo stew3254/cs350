@@ -16,3 +16,8 @@ A listing of all weekly reports
 * <http://condor-team.cslabs.clarkson.edu/reports/10.html>
 * <http://condor-team.cslabs.clarkson.edu/reports/11.html>
 * <http://condor-team.cslabs.clarkson.edu/reports/12.html>
+* <http://condor-team.cslabs.clarkson.edu/reports/13.html>
+* <http://condor-team.cslabs.clarkson.edu/reports/14.html>
+* <http://condor-team.cslabs.clarkson.edu/reports/15.html>
+* <http://condor-team.cslabs.clarkson.edu/reports/16.html>
+* <http://condor-team.cslabs.clarkson.edu/reports/17.html>
