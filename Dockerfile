@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY .env .
 
-CMD [ "python", "src/manage.py", "runserver", "5000" ]
+CMD [ "python", "src/manage.py", "runserver", "0.0.0.0:5000" ]
