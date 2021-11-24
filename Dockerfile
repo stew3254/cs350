@@ -10,3 +10,4 @@ COPY server.sh .
 COPY .env .
 
 CMD ["./server.sh"]
+
