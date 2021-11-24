@@ -1,1 +1,1 @@
-docker-compose up --build -d; docker attach majorizer
+docker-compose up --build
