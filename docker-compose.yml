@@ -6,7 +6,15 @@ services:
      restart: on-failure
      env_file:
        - .env
+<<<<<<< HEAD
   web:
+=======
+     ports:
+       - "5555:5432"
+  web:
+    tty: true
+    stdin_open: true
+>>>>>>> origin/dev
     build: .
     container_name: majorizer
     restart: on-failure
@@ -17,4 +25,8 @@ services:
     ports:
       - "8080:5000"
     volumes:
+<<<<<<< HEAD
       - ./src:/srv/app/src:ro
+=======
+      - ./src:/srv/app/src:ro
+>>>>>>> origin/dev
