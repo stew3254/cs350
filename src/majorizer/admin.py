@@ -2,13 +2,12 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import *
-admin.site.register(Department)
-admin.site.register(Course)
-admin.site.register(CourseOffering)
-admin.site.register(DegreeProgram)
-admin.site.register(User)
-admin.site.register(Student)
-admin.site.register(Schedule)
-admin.site.register(Advisor)
-admin.site.register(AdvisorCode)
-admin.site.register(Comment)
+admin.site.register(DBDepartment)
+admin.site.register(DBCourse)
+admin.site.register(DBCourseOffering)
+admin.site.register(DBDegreeProgram)
+admin.site.register(DBStudent)
+admin.site.register(DBSchedule)
+admin.site.register(DBAdvisor)
+admin.site.register(DBAdvisorCode)
+admin.site.register(DBComment)

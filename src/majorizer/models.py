@@ -2,61 +2,55 @@ from django.db import models
 
 
 # Create your models here.
-class Department(models.Model):
+class DBDepartment(models.Model):
     name = models.CharField(max_length=64)
 
 
-class Course(models.Model):
-    courseID = models.IntegerField(primary_key=True)
+class DBCourse(models.Model):
+    course_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=64)
-    courseNumber = models.CharField(max_length=8, unique=True)
-    equivAttr = models.SmallIntegerField(null=True)
+    course_number = models.CharField(max_length=8, unique=True)
+    equiv_attr = models.SmallIntegerField(null=True)
 
 
-class CourseOffering(models.Model):
+class DBCourseOffering(models.Model):
     term = models.CharField(max_length=6)
     instructor = models.CharField(max_length=64)
     time = models.TimeField()
     room = models.CharField(max_length=8)
-    sectionNum = models.SmallIntegerField()
-    courseID = models.ForeignKey(Course, models.DO_NOTHING)
+    section_num = models.SmallIntegerField()
+    course_id = models.ForeignKey(DBCourse, models.DO_NOTHING)
 
 
-class DegreeProgram(models.Model):
-    isMajor = models.BooleanField()
-    departmentID = models.ForeignKey(Department, models.DO_NOTHING)
-    courses = models.ManyToManyField(Course)
+class DBDegreeProgram(models.Model):
+    is_major = models.BooleanField()
+    department_id = models.ForeignKey(DBDepartment, models.DO_NOTHING)
+    courses = models.ManyToManyField(DBCourse)
 
 
-class User(models.Model):
-    username = models.CharField(max_length=32, primary_key=True)
-    password = models.BinaryField(max_length=60)
-    token = models.CharField(max_length=64)
-
-
-class Student(models.Model):
+class DBStudent(models.Model):
     name = models.CharField(max_length=64)
-    gradTerm = models.CharField(max_length=6)
-    degrees = models.ManyToManyField(DegreeProgram)
+    grad_term = models.CharField(max_length=6)
+    degrees = models.ManyToManyField(DBDegreeProgram)
 
 
-class Schedule(models.Model):
+class DBSchedule(models.Model):
     name = models.CharField(max_length=64)
-    studentID = models.ForeignKey(Student, models.DO_NOTHING)
-    courses = models.ManyToManyField(CourseOffering)
+    student_id = models.ForeignKey(DBStudent, models.DO_NOTHING)
+    courses = models.ManyToManyField(DBCourseOffering)
 
 
-class Advisor(models.Model):
+class DBAdvisor(models.Model):
     name = models.CharField(max_length=64)
-    departmentID = models.ForeignKey(Department, models.DO_NOTHING)
-    sharedSchedules = models.ManyToManyField(Schedule)
+    department_id = models.ForeignKey(DBDepartment, models.DO_NOTHING)
+    shared_schedules = models.ManyToManyField(DBSchedule)
 
 
-class AdvisorCode(models.Model):
-    advisorID = models.ForeignKey(Advisor, models.DO_NOTHING)
+class DBAdvisorCode(models.Model):
+    advisor_id = models.ForeignKey(DBAdvisor, models.DO_NOTHING)
 
 
-class Comment(models.Model):
+class DBComment(models.Model):
     message = models.TextField()
-    scheduleID = models.ForeignKey(Schedule, models.DO_NOTHING)
-    parentID = models.ForeignKey('self', models.DO_NOTHING)
+    schedule_id = models.ForeignKey(DBSchedule, models.DO_NOTHING)
+    parent_id = models.ForeignKey('self', models.DO_NOTHING)
