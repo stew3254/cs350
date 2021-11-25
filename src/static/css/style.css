@@ -1,8 +1,45 @@
 body {
     /*Testing color to see if the stylesheet loaded*/
     background-color: aquamarine;
+    background-image: url("https://c.tenor.com/0pO-d7FH3QgAAAAi/spongebob-meme-spongebob.gif");
 }
 
 h1 {
     color: red;
 }
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li button {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    text-decoration: none;
+  }
+  
+  li button:hover {
+    background-color: #111111;
+  }
+
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: #111111;
+  }
