@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Hello World</h1>
-    <p>This is a template</p>
+<div class='container'>
+    {% include 'class_search.html' %}
+
+    {% include 'calendar.html' %}
+</div>
+
 {% endblock %}
