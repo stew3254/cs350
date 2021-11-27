@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
+from django.db.models.fields import CharField
 
 
 # Create your models here.
@@ -16,7 +18,9 @@ class DBCourse(models.Model):
 class DBCourseOffering(models.Model):
     term = models.CharField(max_length=6)
     instructor = models.CharField(max_length=64)
-    time = models.TimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    days = CharField(max_length=9)  # Comma separated list
     room = models.CharField(max_length=8)
     section_num = models.SmallIntegerField()
     course_id = models.ForeignKey(DBCourse, models.DO_NOTHING)
