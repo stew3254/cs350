@@ -39,6 +39,8 @@ for time in times:
 
 test_schedule = DBSchedule.objects.get(name="Test Schedule")
 
+
+
 # Create your views here.
 def home_view(request):
     login_form = LoginForm()
