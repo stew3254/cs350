@@ -26,7 +26,7 @@ def time_range(start, end, delta):
         yield current.time()
         current += timedelta(minutes=delta)
 
-times = [t for t in time_range(time(8), time(21), 30)]
+times = [t for t in time_range(time(8), time(21, 30), 30)]
 
 class TimeSlot:
     def __init__(self, time) -> None:
@@ -39,6 +39,22 @@ for time in times:
 
 test_schedule = DBSchedule.objects.get(name="Test Schedule")
 
+def schedule_to_timeslots(schedule, time_slots):
+    for course in schedule.courses.all():
+        days = course.days.split(",")
+        #days = map(int, days)
+        start = course.start_time
+        end = course.end_time
+        for index, timeslot in enumerate(time_slots):
+            for day in days:
+                # print(index)
+                # print(timeslot.time)
+                if (timeslot.time == start):
+                    timeslot.classes[int(day)] = course.course_id
+                elif ((timeslots[index-1].classes[int(day)] == course.course_id or timeslots[index-1].classes[int(day)] == "up") and timeslot.time <= end):
+                    timeslot.classes[int(day)] = course.course_id
+
+schedule_to_timeslots(test_schedule, timeslots)
 
 
 # Create your views here.
