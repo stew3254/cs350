@@ -34,10 +34,8 @@ class TimeSlot:
         self.classes = ["none"] * 5  # Indices 0-4 represent Mon-Fri
 
 timeslots = []
-for time in times:
-    timeslots.append(TimeSlot(time))
-
-#test_schedule = DBSchedule.objects.get(name="Test Schedule")
+for t in times:
+    timeslots.append(TimeSlot(t))
 
 def schedule_to_timeslots(schedule, time_slots):
     for course in schedule.courses.all():
@@ -47,14 +45,13 @@ def schedule_to_timeslots(schedule, time_slots):
         end = course.end_time
         for index, timeslot in enumerate(time_slots):
             for day in days:
-                # print(index)
-                # print(timeslot.time)
                 if (timeslot.time == start):
                     timeslot.classes[int(day)] = course.course_id
                 elif ((timeslots[index-1].classes[int(day)] == course.course_id or timeslots[index-1].classes[int(day)] == "up") and timeslot.time <= end):
                     timeslot.classes[int(day)] = course.course_id
 
-#schedule_to_timeslots(test_schedule, timeslots)
+test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
+schedule_to_timeslots(test_schedule, timeslots)
 
 
 # Create your views here.
