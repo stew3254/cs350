@@ -37,7 +37,7 @@ timeslots = []
 for time in times:
     timeslots.append(TimeSlot(time))
 
-test_schedule = DBSchedule.objects.get(name="Test Schedule")
+#test_schedule = DBSchedule.objects.get(name="Test Schedule")
 
 def schedule_to_timeslots(schedule, time_slots):
     for course in schedule.courses.all():
@@ -54,7 +54,7 @@ def schedule_to_timeslots(schedule, time_slots):
                 elif ((timeslots[index-1].classes[int(day)] == course.course_id or timeslots[index-1].classes[int(day)] == "up") and timeslot.time <= end):
                     timeslot.classes[int(day)] = course.course_id
 
-schedule_to_timeslots(test_schedule, timeslots)
+#schedule_to_timeslots(test_schedule, timeslots)
 
 
 # Create your views here.
