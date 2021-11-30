@@ -14,6 +14,8 @@
             {% for class in timeslot.classes%}
                 {% if class == "none" %}
                     <td class="schedule_table_td"></td>
+                {% elif class == "up" %}
+                    <td class="schedule_table_td"></td>
                 {% else %}
                     <td class="schedule_table_td">{{ class }}</td>
                 {% endif %}
