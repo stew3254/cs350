@@ -35,7 +35,13 @@ def schedule_to_timeslots(schedule, timeslots):
         #     timeslot.rowspan = int(timeslot.rowspan / len(days))
 
 def search_classes(search_term):
-    results = DBCourse.objects.filter(course_number__startswith=search_term).values()
+    search_term = search_term.upper()
+    results = DBCourse.objects.filter(course_number__contains=search_term).values()
+    return results
+
+def get_course_offerings(c_id):
+    print(c_id)
+    results = DBCourseOffering.objects.filter(course_id__pk = c_id).values()
     return results
 
 class TimeSlot:

@@ -4,9 +4,11 @@
         {{ class_search_form }}
         <button type="submit" name="class_search_button">Search</button>
     </form>
-    {{ class_search_term }}
     
-    {% for r in class_search_results %}
-        <p>{{ r.name }} | {{ r.course_number }}</p>
-    {% endfor %}
+    <form method="post">
+        {% csrf_token %}
+        {% for r in class_search_results %}
+            <p><input type="submit" value="{{ r.course_id }}" name="class_search_result_button"></p>
+        {% endfor %}
+    </form>
 </div>

@@ -42,6 +42,11 @@ def home_view(request):
             if class_search_form.is_valid():
                 class_search_term = class_search_form.cleaned_data['search_term']
                 class_search_results = search_classes(class_search_term)
+        elif "class_search_result_button" in request.POST:
+            #print(request.POST['class_search_result_button'])
+            selected_class = request.POST['class_search_result_button']
+            offerings = get_course_offerings(selected_class)
+            print(offerings)
                 
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form

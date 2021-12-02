@@ -8,19 +8,24 @@ body {
 h1 {
     color: red;
 }
-
+/*
 ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: #333333;
+    display: flex;
   }
   
   li {
     float: left;
-    display: inline;
+    display: flex;
   }
+
+li form {
+  float: left;
+}
 
 
   li a {
@@ -34,19 +39,25 @@ ul {
   li a:hover {
     background-color: #111111;
   }
-.container {
-  display: flex;
+
+
+
+
+
+
+
+
+
+form {
+  display: inline;
 }
 
-.block {
-  flex: 1;
-  background-color: #333333;
-  border: solid;
+.login_form {
+  margin: auto;
+  text-align: center;
+  vertical-align: middle;
 }
-
-#class_search {
-  max-width: 30%;
-}
+*/
 
 .schedule_table, .schedule_table_th, .schedule_table_td {
   border: 2px solid darkgray;
@@ -60,6 +71,16 @@ ul {
   margin: 0 auto;
 }
 
-form {
-  display: inline;
+.container {
+  display: flex;
+}
+
+#class_search {
+  max-width: 30%;
+}
+
+.block {
+  flex: 1;
+  background-color: #333333;
+  border: solid;
 }
