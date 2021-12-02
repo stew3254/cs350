@@ -3,37 +3,52 @@ from django.shortcuts import render
 from majorizer.models import *
 from majorizer.util import *
 
-from .forms import LoginForm
+from .forms import ClassSearchForm, LoginForm
 
 from datetime import time
 
-# There must be a better way to do this
-# Update: found a better way to do this
-"""
-times = ["8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", 
-    "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", 
-    "5:30 PM", "6:00 PM", "6:30 PM", "7:00 PM", "7:30 PM", "8:00 PM", "8:30 PM", "9:00 PM"]
-"""
-
+# Sets up timeslots
 times = [t for t in time_range(time(8), time(21, 30), 30)]
 
 timeslots = []
 for t in times:
     timeslots.append(TimeSlot(t))
 
+# Test data
 test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
 schedule_to_timeslots(test_schedule, timeslots)
 
 # Create your views here.
 def home_view(request):
     login_form = LoginForm()
+    class_search_form = ClassSearchForm()
 
+    name = ""
+    class_search_term = ""
+    class_search_results = []
+
+    context_dict = {}
+    
+
+    # Handle forms
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['username']
-            form = LoginForm(request.POST)
-            return render(request, "home.html", {'login_form' : login_form, 'name' : name, 'timeslots' : timeslots})
+        if "login_button" in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                name = login_form.cleaned_data['username']
+                login_form = LoginForm(request.POST)
+        elif "class_search_button" in request.POST:
+            class_search_form = ClassSearchForm(request.POST)
+            if class_search_form.is_valid():
+                class_search_term = class_search_form.cleaned_data['search_term']
+                class_search_results = search_classes(class_search_term)
+                
+    context_dict['login_form'] = login_form
+    context_dict['class_search_form'] = class_search_form
+    context_dict['name'] = name
+    context_dict['timeslots'] = timeslots
+    context_dict['class_search_term'] = class_search_term
+    context_dict['class_search_results'] = class_search_results
 
-    return render(request, "home.html", {'login_form' : login_form, 'name' : "NONE", 'timeslots' : timeslots})
+    return render(request, "home.html", context_dict)
 

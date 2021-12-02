@@ -21,18 +21,7 @@ ul {
     float: left;
     display: inline;
   }
-  
-  li button {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 8px;
-    text-decoration: none;
-  }
-  
-  li button:hover {
-    background-color: #111111;
-  }
+
 
   li a {
     display: block;

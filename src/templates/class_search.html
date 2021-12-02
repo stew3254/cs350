@@ -1,3 +1,12 @@
 <div class='block' id="class_search">
-    This is from the class_search.html file
+    <form method="post">
+        {% csrf_token %}
+        {{ class_search_form }}
+        <button type="submit" name="class_search_button">Search</button>
+    </form>
+    {{ class_search_term }}
+    
+    {% for r in class_search_results %}
+        <p>{{ r.name }} | {{ r.course_number }}</p>
+    {% endfor %}
 </div>

@@ -1,10 +1,11 @@
 from datetime import time, timedelta, datetime
+from majorizer.models import *
 
 def time_range(start, end, delta):
     # https://stackoverflow.com/questions/39298054/generating-15-minute-time-interval-array-in-python
     # https://stackoverflow.com/questions/656297/python-time-timedelta-equivalent
     # The following two lines are necessary because time objects do not support
-    # addition with timedelta for some reason, but datetime objects do
+    # addition with timedelta, but datetime objects do
     date_start = datetime(2001, 2, 28, start.hour, start.minute)  # Date is arbitrary, we only care about the time
     date_end = datetime(2001, 2, 28, end.hour, end.minute)
     current = date_start
@@ -24,7 +25,7 @@ def schedule_to_timeslots(schedule, timeslots):
                     timeslot.classes[int(day)] = course.course_id.name
                 elif ((timeslots[index-1].classes[int(day)] == course.course_id.name or timeslots[index-1].classes[int(day)] == "up") and timeslot.time <= end):
                     timeslot.classes[int(day)] = course.course_id.name
-        #This section calculates the correct rowspan for the html table elements
+        #This section calculates the correct rowspan for the html table elements (Currently doesn't work for schedules with more than one class)
         # for index, timeslot in enumerate(timeslots):
         #     for day in days:
         #         j=1
@@ -33,9 +34,12 @@ def schedule_to_timeslots(schedule, timeslots):
         #             timeslot.rowspan += 1
         #     timeslot.rowspan = int(timeslot.rowspan / len(days))
 
+def search_classes(search_term):
+    results = DBCourse.objects.filter(course_number__startswith=search_term).values()
+    return results
 
 class TimeSlot:
     def __init__(self, time) -> None:
         self.time = time
         self.classes = ["none"] * 5  # Indices 0-4 represent Mon-Fri
-        #self.rowspan = 1
+        #self.rowspan = 1  # This probably doesn't work here. Classes should store their own rowspans maybe?
