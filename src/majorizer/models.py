@@ -1,9 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.fields import CharField
 
-
 # Create your models here.
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
 class DBDepartment(models.Model):
     name = models.CharField(max_length=64)
 
@@ -58,3 +62,20 @@ class DBComment(models.Model):
     message = models.TextField()
     schedule_id = models.ForeignKey(DBSchedule, models.DO_NOTHING)
     parent_id = models.ForeignKey('self', models.DO_NOTHING)
+
+
+class DBUser(models.Model):
+    user = models.OneToOneField(User, models.CASCADE)
+    student_id = models.ForeignKey(DBStudent, models.DO_NOTHING, null=True)
+    advisor_id = models.ForeignKey(DBAdvisor, models.DO_NOTHING, null=True)
+
+
+@receiver(post_save, sender=DBUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        DBUser.objects.create(user=instance)
+
+
+@receiver(post_save, sender=DBUser)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
