@@ -65,6 +65,9 @@ def home_view(request):
             #print(request.POST['class_search_result_button'])
             selected_class = request.POST['class_search_result_button']
             offerings = get_course_offerings(selected_class)
+
+        elif "course_offering_button" in request.POST:
+            print(request.POST['course_offering_button'])
             
                 
     context_dict['login_form'] = login_form

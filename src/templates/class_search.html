@@ -32,7 +32,7 @@
             <form method="post">
                 {% csrf_token %}
                 {% for o in offerings %}
-                    <p><button class="btn btn-outline-info" type="submit" value="" name="course_offering_button">{{ o.start_time }} - {{ o.end_time }}</button></p>
+                    <p><button class="btn btn-outline-info" type="submit" value="{{ o.id }}" name="course_offering_button">{{ o.start_time }} - {{ o.end_time }}</button></p>
                 {% endfor %}
             </form>
         </div>
