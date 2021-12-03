@@ -1,6 +1,7 @@
 <form method="post" class="login_form">
   {% csrf_token %}
-  {{ login_form }}
-  <button type="submit" name="login_button">Log In</button>
-  
+  <div class="input-group">
+    {{ login_form }}
+    <button type="submit" name="login_button" class="btn btn-outline-success btn-sm">Log In</button>
+  </div>
 </form>

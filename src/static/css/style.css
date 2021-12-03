@@ -59,12 +59,11 @@ form {
 }
 */
 
-.schedule_table, .schedule_table_th, .schedule_table_td {
-  border: 2px solid darkgray;
-  border-collapse: collapse;
-  color: white;
+table {
   table-layout: fixed;
-  width: 100px;
+}
+td {
+  width: 10%;
 }
 
 .schedule_table {
@@ -73,6 +72,8 @@ form {
 
 .container {
   display: flex;
+  padding: 8px;
+  background-color: black;
 }
 
 #class_search {
@@ -84,3 +85,4 @@ form {
   background-color: #333333;
   border: solid;
 }
+

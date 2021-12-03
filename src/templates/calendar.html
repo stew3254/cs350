@@ -1,27 +1,32 @@
 <div class='block'>
-    <table class="schedule_table">
-        <tr>
-            <th class="schedule_table_th"></th>
-            <th class="schedule_table_th">Monday</th>
-            <th class="schedule_table_th">Tuesday</th>
-            <th class="schedule_table_th">Wednesday</th>
-            <th class="schedule_table_th">Thursday</th>
-            <th class="schedule_table_th">Friday</th>
-        </tr>
-        {% for timeslot in timeslots %}
-        <tr>
-            <th class="schedule_table_th">{{ timeslot.time }}</th>
-            {% for class in timeslot.classes%}
-                {% if class == "none" %}
-                    <td class="schedule_table_td"></td>
-                {% elif class == "up" %}
-                    <td class="schedule_table_td"></td>
-                {% else %}
-                    <td class="schedule_table_td">{{ class }}</td>
-                {% endif %}
+    <div style="padding: 8px">
+        <h5 style="color: white;">Active Schedule: {{ active_schedule.name }}</h5>
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Monday</th>
+                    <th scope="col">Tuesday</th>
+                    <th scope="col">Wednesday</th>
+                    <th scope="col">Thursday</th>
+                    <th scope="col">Friday</th>
+                </tr>
+            </thead>
+            {% for timeslot in timeslots %}
+            <tr>
+                <th scope="row">{{ timeslot.time }}</th>
+                {% for class in timeslot.classes%}
+                    {% if class == "none" %}
+                        <td></td>
+                    {% elif class == "up" %}
+                        <td></td>
+                    {% else %}
+                        <td>{{ class }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-        {% endfor %}
 
-    </table>
+        </table>
+    </div>
 </div>

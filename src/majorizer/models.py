@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.fields import CharField
-
+from django.conf import settings
 
 # Create your models here.
 class DBDepartment(models.Model):
