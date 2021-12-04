@@ -22,9 +22,9 @@ def schedule_to_timeslots(schedule, timeslots):
         for index, timeslot in enumerate(timeslots):
             for day in days:
                 if (timeslot.time == start):
-                    timeslot.classes[int(day)] = course.course_id.name
-                elif ((timeslots[index-1].classes[int(day)] == course.course_id.name or timeslots[index-1].classes[int(day)] == "up") and timeslot.time <= end):
-                    timeslot.classes[int(day)] = course.course_id.name
+                    timeslot.classes[int(day)] = (course.course_id.name, course.id)
+                elif (timeslots[index-1].classes[int(day)][0] == course.course_id.name and timeslot.time <= end):
+                    timeslot.classes[int(day)] = (course.course_id.name, course.id)
         #This section calculates the correct rowspan for the html table elements (Currently doesn't work for schedules with more than one class)
         # for index, timeslot in enumerate(timeslots):
         #     for day in days:
@@ -43,6 +43,13 @@ def get_course_offerings(c_id):
     print(c_id)
     results = DBCourseOffering.objects.filter(course_id__pk = c_id).values()
     return results
+
+def add_course_to_schedule(course_offering, schedule):
+    schedule.courses.add(course_offering)
+    
+
+def remove_course_from_schedule(course_offering, schedule):
+    schedule.courses.remove(course_offering)
 
 class TimeSlot:
     def __init__(self, time) -> None:

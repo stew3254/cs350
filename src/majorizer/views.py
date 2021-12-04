@@ -21,6 +21,7 @@ test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
 
 # Create your views here.
 def home_view(request):
+    
     login_form = LoginForm()
     class_search_form = ClassSearchForm()
 
@@ -33,8 +34,7 @@ def home_view(request):
     offerings = None
     selected_class = None
     active_schedule = test_schedule
-
-    schedule_to_timeslots(active_schedule, timeslots)
+    active_schedule.refresh_from_db()
 
     context_dict = {}
     
@@ -67,8 +67,16 @@ def home_view(request):
             offerings = get_course_offerings(selected_class)
 
         elif "course_offering_button" in request.POST:
-            print(request.POST['course_offering_button'])
-            
+            #print(request.POST['course_offering_button'])
+            course_to_add = request.POST['course_offering_button']
+            add_course_to_schedule(course_to_add, active_schedule)
+            schedule_to_timeslots(active_schedule, timeslots)
+
+        elif "remove_course_from_schedule_button" in request.POST:
+            course_to_remove = request.POST["remove_course_from_schedule_button"]
+            remove_course_from_schedule(course_to_remove, active_schedule)
+            active_schedule.refresh_from_db()
+            schedule_to_timeslots(active_schedule, timeslots)
                 
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form
