@@ -50,8 +50,8 @@ def schedule_to_timeslots(schedule, time_slots):
                 elif ((timeslots[index-1].classes[int(day)] == course.course_id or timeslots[index-1].classes[int(day)] == "up") and timeslot.time <= end):
                     timeslot.classes[int(day)] = course.course_id
 
-test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
-schedule_to_timeslots(test_schedule, timeslots)
+# test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
+# schedule_to_timeslots(test_schedule, timeslots)
 
 
 # Create your views here.
