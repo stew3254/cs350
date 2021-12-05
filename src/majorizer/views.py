@@ -1,4 +1,3 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from majorizer.models import *
 from majorizer.util import *
@@ -15,13 +14,9 @@ timeslots = []
 for t in times:
     timeslots.append(TimeSlot(t))
 
-# Test data
-test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
-
 
 # Create your views here.
 def home_view(request):
-    
     login_form = LoginForm()
     class_search_form = ClassSearchForm()
 
@@ -37,7 +32,6 @@ def home_view(request):
     active_schedule.refresh_from_db()
 
     context_dict = {}
-    
 
     # Handle forms
     if request.method == 'POST':
@@ -62,12 +56,12 @@ def home_view(request):
                 class_search_results = search_classes(class_search_term)
 
         elif "class_search_result_button" in request.POST:
-            #print(request.POST['class_search_result_button'])
+            # print(request.POST['class_search_result_button'])
             selected_class = request.POST['class_search_result_button']
             offerings = get_course_offerings(selected_class)
 
         elif "course_offering_button" in request.POST:
-            #print(request.POST['course_offering_button'])
+            # print(request.POST['course_offering_button'])
             course_to_add = request.POST['course_offering_button']
             add_course_to_schedule(course_to_add, active_schedule)
             schedule_to_timeslots(active_schedule, timeslots)
@@ -77,7 +71,7 @@ def home_view(request):
             remove_course_from_schedule(course_to_remove, active_schedule)
             active_schedule.refresh_from_db()
             schedule_to_timeslots(active_schedule, timeslots)
-                
+
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form
     context_dict['name'] = name
@@ -90,4 +84,3 @@ def home_view(request):
     context_dict['active_schedule'] = active_schedule
 
     return render(request, "home.html", context_dict)
-
