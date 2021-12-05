@@ -1,7 +1,18 @@
-<nav>
-    <ul>
-        <li><a href="/">Majorizer</a></li>
-        <li>{% include 'registration/login.html' %}</li>
-        <li> {{ name }} </li>
-    </ul>
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container-fluid">
+            <a href="/" class="navbar-brand">Majorizer</a>
+            {% if not logged_in %}
+                {% include 'registration/login.html' %}
+            {% else %}
+                <div class="row">
+                    <div class="col">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="logout_button" class="btn btn-outline-danger">Log Out</button>
+                        </form>
+                    </div>
+                    <h6 style="color: white;" class="col">Logged in as {{ user.username }}</h6>
+                </div>
+            {% endif %}
+    </div>
 </nav>

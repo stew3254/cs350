@@ -1,3 +1,41 @@
-<div class='block' id="class_search">
-    This is from the class_search.html file
+<div class='block' id="class_search" style="padding: 8px">
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-group" style="padding-bottom: 16px;">
+            {{ class_search_form }}
+            <button type="submit" name="class_search_button" class="btn btn-outline-primary">Search</button>
+        </div>
+    </form>
+    
+    {% if class_search_results %}
+    <div class="card" style="background-color: #464747;">
+        <div style="padding: 8px;">
+            <h4 class="card-title" style="color: white;">Search Results:</h4>
+        </div>
+        <div class="card-body" style="background-color: #2d2e2d;">
+            <form method="post">
+                {% csrf_token %}
+                {% for r in class_search_results %}
+                    <p><button class="btn btn-outline-info" type="submit" value="{{ r.course_id }}" name="class_search_result_button">{{ r.name }} | {{ r.course_number }}</button></p>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if offerings %}
+    <div class="card" style="background-color: #464747;">
+        <div style="padding: 8px;">
+            <h4 class="card-title" style="color: white;">Available Course Offerings</h4>
+        </div>
+        <div class="card-body" style="background-color: #2d2e2d;">
+            <form method="post">
+                {% csrf_token %}
+                {% for o in offerings %}
+                    <p><button class="btn btn-outline-info" type="submit" value="{{ o.id }}" name="course_offering_button">{{ o.start_time }} - {{ o.end_time }}</button></p>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
 </div>
