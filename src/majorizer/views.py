@@ -14,6 +14,8 @@ timeslots = []
 for t in times:
     timeslots.append(TimeSlot(t))
 
+test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
+
 
 # Create your views here.
 def home_view(request):
