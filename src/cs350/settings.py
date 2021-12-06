@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # REST API
+    'rest_framework',
+
     # Custom
     'majorizer',
 ]

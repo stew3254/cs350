@@ -2,9 +2,11 @@ from django.shortcuts import render
 from majorizer.models import *
 from majorizer.util import *
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib.auth.models import User, Group
+from rest_framework import viewsets
+from rest_framework import permissions
 from .forms import ClassSearchForm, LoginForm
-
+from .serializers import GroupSerializer, UserSerializer
 from datetime import time
 
 # Sets up timeslots
@@ -86,3 +88,21 @@ def home_view(request):
     context_dict['active_schedule'] = active_schedule
 
     return render(request, "home.html", context_dict)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAuthenticated]
