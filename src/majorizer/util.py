@@ -1,6 +1,8 @@
 from datetime import time, timedelta, datetime
 from majorizer.models import *
 
+
+
 def time_range(start, end, delta):
     # https://stackoverflow.com/questions/39298054/generating-15-minute-time-interval-array-in-python
     # https://stackoverflow.com/questions/656297/python-time-timedelta-equivalent
@@ -13,7 +15,14 @@ def time_range(start, end, delta):
         yield current.time()
         current += timedelta(minutes=delta)
 
+times = [t for t in time_range(time(8), time(21, 30), 30)]
+
 def schedule_to_timeslots(schedule, timeslots):
+    
+    timeslots.clear()
+    for t in times:
+        timeslots.append(TimeSlot(t))
+
     for course in schedule.courses.all():
         days = course.days.split(",")
         start = course.start_time
@@ -39,14 +48,13 @@ def search_classes(search_term):
     results = DBCourse.objects.filter(course_number__contains=search_term).values()
     return results
 
-def get_course_offerings(c_id):
-    print(c_id)
-    results = DBCourseOffering.objects.filter(course_id__pk = c_id).values()
+def get_course_offerings(c_id, schedule):
+    already_in_schedule = schedule.courses.all()
+    results = DBCourseOffering.objects.filter(course_id__pk = c_id).exclude(id__in=already_in_schedule).values()
     return results
 
 def add_course_to_schedule(course_offering, schedule):
     schedule.courses.add(course_offering)
-    
 
 def remove_course_from_schedule(course_offering, schedule):
     schedule.courses.remove(course_offering)
