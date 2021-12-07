@@ -62,11 +62,9 @@ def home_view(request):
         elif "remove_course_from_schedule_button" in request.POST:
             course_to_remove = request.POST["remove_course_from_schedule_button"]
             remove_course_from_schedule(course_to_remove, active_schedule)
-            #active_schedule.refresh_from_db()
             schedule_to_timeslots(active_schedule, timeslots)
 
         elif "course_offering_button" in request.POST:
-            # print(request.POST['course_offering_button'])
             course_to_add = request.POST['course_offering_button']
             add_course_to_schedule(course_to_add, active_schedule)
             schedule_to_timeslots(active_schedule, timeslots)
@@ -87,5 +85,28 @@ def home_view(request):
     return render(request, "home.html", context_dict)
 
 def register_view(request):
+    context_dict = {}
+
+    registration_form = LoginForm()
     login_form = LoginForm()
-    return render(request, "register.html", {'login_form' : login_form})
+
+    # Handle forms
+    if request.method == 'POST':
+        if "register_form_button" in request.POST:
+            registration_form = LoginForm(request.POST)
+            if registration_form.is_valid():
+                uname = registration_form.cleaned_data['username']
+                pword = registration_form.cleaned_data['password']
+
+            full_name = request.POST['name']
+            grad_semester = request.POST['grad_semester']
+            grad_year = request.POST['grad_year']
+
+            print(grad_semester)
+
+    context_dict['registration_form'] = registration_form
+    context_dict['login_form'] = login_form
+    context_dict['majors'] = get_majors()
+    context_dict['minors'] = get_minors()
+
+    return render(request, "register.html", context_dict)

@@ -1,9 +1,42 @@
 <form method="post" class="login_form">
   {% csrf_token %}
-  <div class="input-group">
-    {{ login_form }}
-    <button type="submit" name="login_button" class="btn btn-outline-success btn-sm">Log In</button>
-    
+  <div class="row input-group" style="padding: 8px;">
+    <div class="col input-group">
+      {{ registration_form }}
+    </div>
   </div>
+  <div class="row input-group" style="padding: 8px;">
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Name" maxlength="64" name="name">
+    </div>
+    <div class="col input-group">
+      <span class="input-group-text">Graduation Term</span>
+      <select id="grad_term" class='form-control' name="grad_semester">
+        <option value="Fall">Fall</option>
+        <option value="Fall">Spring</option>
+      </select>
+      <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control" name="grad_year"/>
+    </div>
+  </div>
+  <!-- Majors and Minors are hardcoded. Not ideal but not enough time to fix -->
+  <div class="row" style="padding: 8px; max-width: 25%;">
+    <div class="row">
+      <div class="col" style="color: white;">Computer science</div>
+      <div class="col-md-auto">
+        <input type="checkbox" value="Computer Science" class="form-check-input">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col" style="color: white;">Chemical Engineering</div>
+      <div class="col-md-auto">
+        <input type="checkbox" value="Chemical Engineering" class="form-check-input">
+      </div>
+    </div>
+  </div>
+
+  <div class="float-end" style="padding: 32px;">
+    <button class="btn btn-outline-info btn-sm float-right" style="padding: 8px;" name="register_form_button">Register</button>
+  </div>
+  
   
 </form>

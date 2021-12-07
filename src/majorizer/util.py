@@ -48,13 +48,17 @@ def schedule_to_timeslots(schedule, timeslots):
 
 def search_classes(search_term):
     search_term = search_term.upper()
-    results = DBCourse.objects.filter(course_number__contains=search_term).values()
-    return results
+    return DBCourse.objects.filter(course_number__contains=search_term).values()
 
 def get_course_offerings(c_id, schedule):
     already_in_schedule = schedule.courses.all()
-    results = DBCourseOffering.objects.filter(course_id__pk = c_id).exclude(id__in=already_in_schedule).values()
-    return results
+    return DBCourseOffering.objects.filter(course_id__pk = c_id).exclude(id__in=already_in_schedule).values()
+
+def get_majors():
+    return DBDegreeProgram.objects.filter(is_major=True).values()
+
+def get_minors():
+    return DBDegreeProgram.objects.filter(is_major=False).values()
 
 def add_course_to_schedule(course_offering, schedule):
     schedule.courses.add(course_offering)
