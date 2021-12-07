@@ -17,11 +17,14 @@ def time_range(start, end, delta):
 
 times = [t for t in time_range(time(8), time(21, 30), 30)]
 
-def schedule_to_timeslots(schedule, timeslots):
-    
+def init_timeslots(timeslots):
     timeslots.clear()
     for t in times:
         timeslots.append(TimeSlot(t))
+
+def schedule_to_timeslots(schedule, timeslots):
+
+    init_timeslots(timeslots)
 
     for course in schedule.courses.all():
         days = course.days.split(",")

@@ -1,8 +1,15 @@
 <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
-            <a href="/" class="navbar-brand">Majorizer</a>
+            <a href="/" class="navbar-brand"><img src="/static/images/majorizer_logo.png"></a>
             {% if not logged_in %}
-                {% include 'registration/login.html' %}
+            <div class="row">
+                <div class="col">
+                    {% include 'registration/login.html' %}
+                </div>
+                <div class="col-md-auto">
+                    <a href="/register" class="btn btn-outline-info btn-sm" style="padding: 8px;">Register</a>
+                </div>
+            </div>
             {% else %}
                 <div class="row">
                     <div class="col">

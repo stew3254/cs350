@@ -5,9 +5,12 @@ from django.contrib.auth import authenticate, login, logout
 
 from .forms import ClassSearchForm, LoginForm
 
+from django.http import HttpResponse
+
 from datetime import time
 
 timeslots = []
+init_timeslots(timeslots)
 
 test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
 
@@ -82,3 +85,7 @@ def home_view(request):
     context_dict['active_schedule'] = active_schedule
 
     return render(request, "home.html", context_dict)
+
+def register_view(request):
+    login_form = LoginForm()
+    return render(request, "register.html", {'login_form' : login_form})
