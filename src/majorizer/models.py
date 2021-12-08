@@ -28,6 +28,7 @@ class DBCourseOffering(models.Model):
 
 
 class DBDegreeProgram(models.Model):
+    name = models.CharField(max_length=64, default="Unspecified Name")
     is_major = models.BooleanField()
     department_id = models.ForeignKey(DBDepartment, models.DO_NOTHING)
     courses = models.ManyToManyField(DBCourse)
@@ -66,7 +67,7 @@ class DBUser(models.Model):
     student_id = models.ForeignKey(DBStudent, models.DO_NOTHING, null=True)
     advisor_id = models.ForeignKey(DBAdvisor, models.DO_NOTHING, null=True)
 
-
+'''
 @receiver(post_save, sender=DBUser)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -76,3 +77,4 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=DBUser)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+'''

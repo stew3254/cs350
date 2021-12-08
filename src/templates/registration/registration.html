@@ -12,31 +12,41 @@
     <div class="col input-group">
       <span class="input-group-text">Graduation Term</span>
       <select id="grad_term" class='form-control' name="grad_semester">
-        <option value="Fall">Fall</option>
-        <option value="Fall">Spring</option>
+        <option value="F">Fall</option>
+        <option value="S">Spring</option>
       </select>
-      <input type="number" min="1900" max="2099" step="1" value="2016" class="form-control" name="grad_year"/>
+      <input type="number" min="1900" max="2099" step="1" value="2021" class="form-control" name="grad_year"/>
     </div>
   </div>
-  <!-- Majors and Minors are hardcoded. Not ideal but not enough time to fix -->
-  <div class="row" style="padding: 8px; max-width: 25%;">
-    <div class="row">
-      <div class="col" style="color: white;">Computer science</div>
-      <div class="col-md-auto">
-        <input type="checkbox" value="Computer Science" class="form-check-input">
+
+  <div class="row" style="padding: 8px; max-width: 50%;">
+    <div class="col">
+      <h6>Majors</h6>
+      {% for m in majors %}
+      <div class="row">
+        <div class="col" style="color: rgb(192, 192, 192);">{{m.name}}</div>
+        <div class="col-md-auto">
+          <input name="degree_programs" type="checkbox" value="{{ m.id }}" class="form-check-input">
+        </div>
       </div>
+      {% endfor %}
     </div>
-    <div class="row">
-      <div class="col" style="color: white;">Chemical Engineering</div>
-      <div class="col-md-auto">
-        <input type="checkbox" value="Chemical Engineering" class="form-check-input">
+
+    <div class="col">
+      <h6>Minors</h6>
+      {% for m in minors %}
+      <div class="row">
+        <div class="col" style="color: rgb(192, 192, 192);">{{m.name}}</div>
+        <div class="col-md-auto">
+          <input name="degree_programs" type="checkbox" value="{{ m.id }}" class="form-check-input">
+        </div>
       </div>
+      {% endfor %}
     </div>
   </div>
 
   <div class="float-end" style="padding: 32px;">
-    <button class="btn btn-outline-info btn-sm float-right" style="padding: 8px;" name="register_form_button">Register</button>
+    <button type="submit" class="btn btn-outline-info btn-sm float-right" style="padding: 8px;" name="register_form_button">Register</button>
   </div>
-  
-  
+
 </form>

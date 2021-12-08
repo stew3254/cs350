@@ -1,6 +1,6 @@
 from datetime import time, timedelta, datetime
 from majorizer.models import *
-
+from django.contrib.auth.models import User
 
 
 def time_range(start, end, delta):
@@ -65,6 +65,22 @@ def add_course_to_schedule(course_offering, schedule):
 
 def remove_course_from_schedule(course_offering, schedule):
     schedule.courses.remove(course_offering)
+
+def create_user(full_name, uname, pword, grad_semester, grad_year, degree_programs):
+    new_user = User.objects.create_user(first_name=full_name, username=uname, password=pword)
+    new_student, _ = DBStudent.objects.get_or_create(name=full_name, grad_term=(grad_semester + str(grad_year)))
+
+    # Expecting strings, need ints
+    for d in degree_programs:
+        d = int(d)
+    
+    degrees = DBDegreeProgram.objects.filter(pk__in=degree_programs)
+    for d in degrees:
+        new_student.degrees.add(d)
+
+    new_majorizer_user, _ = DBUser.objects.get_or_create(user=new_user, student_id=new_student)
+
+    return new_majorizer_user;
 
 class TimeSlot:
     def __init__(self, time) -> None:

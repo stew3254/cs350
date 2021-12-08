@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from majorizer.models import *
 from majorizer.util import *
 from django.contrib.auth import authenticate, login, logout
@@ -14,21 +14,43 @@ init_timeslots(timeslots)
 
 test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
 
+print("\n\nTest")
+
 # Create your views here.
 def home_view(request):
     login_form = LoginForm()
     class_search_form = ClassSearchForm()
 
-    user = None
+    django_user = request.user
+    logged_in = django_user.is_authenticated
+    
+    
+    if logged_in:
+        majorizer_user = DBUser.objects.get(user=django_user)
+        schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
+        if schedules:
+            if "selected_schedule_id" in request.session:
+                active_schedule = DBSchedule.objects.get(id=request.session['selected_schedule_id'])
+            else:
+                active_schedule = schedules[0]
+        else:
+            active_schedule = None
+    else:
+        active_schedule = None
+        schedules = None
+
+    if active_schedule is not None:
+        schedule_to_timeslots(active_schedule, timeslots)
 
     name = ""
     class_search_term = ""
     class_search_results = []
-    logged_in = False
     offerings = None
     selected_class = None
-    active_schedule = test_schedule
-    active_schedule.refresh_from_db()
+    
+
+    #active_schedule = test_schedule
+    #active_schedule.refresh_from_db()
 
     context_dict = {}
 
@@ -39,14 +61,27 @@ def home_view(request):
             if login_form.is_valid():
                 name = login_form.cleaned_data['username']
                 pword = login_form.cleaned_data['password']
-                user = authenticate(username=name, password=pword)
-                if user is not None:
-                    login(request, user)
+                django_user = authenticate(username=name, password=pword)
+                if django_user is not None:
+                    login(request, django_user)
                     logged_in = True
+                else:
+                    print("\nno such user!\n")
+                majorizer_user = DBUser.objects.get(user=django_user)
+                schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
+                if schedules:
+                    if "selected_schedule_id" in request.session:
+                        active_schedule = DBSchedule.objects.get(id=request.session['selected_schedule_id'])
+                    else:
+                        active_schedule = schedules[0]
+                else:
+                    active_schedule = None
+                
 
         elif "logout_button" in request.POST:
             logout(request)
             logged_in = False
+            schedules = None
 
         elif "class_search_button" in request.POST:
             class_search_form = ClassSearchForm(request.POST)
@@ -69,7 +104,16 @@ def home_view(request):
             add_course_to_schedule(course_to_add, active_schedule)
             schedule_to_timeslots(active_schedule, timeslots)
 
-        
+        elif "new_schedule_button" in request.POST:
+            new_schedule_name = request.POST['new_schedule_name']
+            new_schedule, _ = DBSchedule.objects.get_or_create(name=new_schedule_name, student_id=majorizer_user.student_id)
+            schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
+
+        elif "schedule_select_button" in request.POST:
+            selected_schedule = request.POST['schedules']
+            active_schedule = DBSchedule.objects.get(id=selected_schedule)
+            request.session['selected_schedule_id'] = active_schedule.id
+            schedule_to_timeslots(active_schedule, timeslots)
 
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form
@@ -81,6 +125,7 @@ def home_view(request):
     context_dict['offerings'] = offerings
     context_dict['selected_class'] = selected_class
     context_dict['active_schedule'] = active_schedule
+    context_dict['schedules'] = schedules
 
     return render(request, "home.html", context_dict)
 
@@ -92,17 +137,20 @@ def register_view(request):
 
     # Handle forms
     if request.method == 'POST':
-        if "register_form_button" in request.POST:
-            registration_form = LoginForm(request.POST)
-            if registration_form.is_valid():
-                uname = registration_form.cleaned_data['username']
-                pword = registration_form.cleaned_data['password']
+        uname = request.POST['username']
+        pword = request.POST['password']
+        full_name = request.POST['name']
+        grad_semester = request.POST['grad_semester']
+        grad_year = request.POST['grad_year']
 
-            full_name = request.POST['name']
-            grad_semester = request.POST['grad_semester']
-            grad_year = request.POST['grad_year']
+        degree_programs = request.POST.getlist('degree_programs')
 
-            print(grad_semester)
+        #TODO: Validate username and password
+
+        create_user(full_name, uname, pword, grad_semester, grad_year, degree_programs)
+
+        return redirect("/")
+
 
     context_dict['registration_form'] = registration_form
     context_dict['login_form'] = login_form
