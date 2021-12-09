@@ -6,7 +6,9 @@
                 {% if schedules %}
                     <div class="row" style="padding: 8px;">
                         <div class="col">
-                            <h4 style="color: white;">Selected Schedule: {{ active_schedule.name }}</h4>
+                            <h5 style="color: rgb(153, 153, 153);">Selected Schedule: <span style="color: skyblue;">{{ active_schedule.name }} </span>| 
+                                {% if active_schedule.is_fall_semester %} <span style="color: rgb(110, 143, 156);">Fall</span> | {% else %} <span style="color: skyblue;">Spring </span>| {% endif %}
+                                <span style="color: rgb(110, 143, 156);">{{ active_schedule.year }}</span></h5>
                         </div>
                         <div class="col input-group">
                             <span class="input-group-text">Select Schedule</span>
@@ -15,9 +17,10 @@
                                         <option value="{{ s.pk }}">{{ s.name }}</option>
                                     {% endfor %}
                             </select>
+                            <button type="submit" name="schedule_select_button" class="btn btn-outline-success btn-sm" style="padding: 8px;">Select</button>
                         </div>
                         <div class="col-md-auto">
-                            <button type="submit" name="schedule_select_button" class="btn btn-outline-success btn-sm" style="padding: 8px;">Select</button>
+                            <button type="submit" name="schedule_delete_button" class="btn btn-outline-danger btn-sm" style="padding: 8px;">Delete</button>
                         </div>
                     </div>
                     <table class="table table-dark table-striped">
@@ -52,27 +55,11 @@
 
                     </table>
 
-                    <div class="row input-group">
-                        <div class="col input-group">
-                            <span class="input-group-text">New Schedule Name</span>
-                            <input type="text" class="form-control" placeholder="Name" maxlength="64" name="new_schedule_name">
-                        </div>
-                    </div>
-                    <div class="float-end" style="padding: 22px;">
-                        <button type="submit" class="btn btn-outline-info btn-sm float-right" style="padding: 8px;" name="new_schedule_button">Create New Schedule</button>
-                    </div>
+                    {% include 'new_schedule.html' %}
 
                 {% else %}
                     <h6>You have no schedules! Make one! Now!</h6>
-                    <div class="row input-group">
-                        <div class="col input-group">
-                            <span class="input-group-text">New Schedule Name</span>
-                            <input type="text" class="form-control" placeholder="Name" maxlength="64" name="new_schedule_name">
-                        </div>
-                    </div>
-                    <div class="float-end" style="padding: 22px;">
-                        <button type="submit" class="btn btn-outline-info btn-sm float-right" style="padding: 8px;" name="new_schedule_button">Create New Schedule</button>
-                    </div>
+                    {% include 'new_schedule.html' %}
                 {% endif %}
             </form>
         {% else %}
