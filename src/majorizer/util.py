@@ -93,6 +93,12 @@ def create_user(full_name, uname, pword, grad_semester, grad_year, degree_progra
 
     return new_majorizer_user
 
+'''
+CSV file in the following format
+Course Number   Course Name   Times   Term   Replacements   Prerequisites   Professor   Room   Course ID
+0               1             2       3      4              5               6           7      8
+'''
+
 def parse(file):
     df = reader.read_csv(file)
     program = df[0,0]
@@ -104,8 +110,9 @@ def parse(file):
         if time == "N/A":
             time = -1
             end_time = begin_time = time
-        elif time.startswith('L'):
-            time = time[:2]
+        else:
+            type = time[:2]
+            time = time[2:]
             time_array = filter(None, time.split(" "))
             days = filter(None, re.split("([A-Z][^A-Z]*)", time_array[0]))
             for day in days:
@@ -127,7 +134,7 @@ def parse(file):
         course = DBCourse(course_id=item[8], name=item[1], course_number=item[0])
         course.save()
 
-        course_offering = DBCourseOffering(term=item[3], instructor=item[6], start_time=begin_time, end_time=end_time, days=days, room=item[6], section_num = 1, course_id=course)
+        course_offering = DBCourseOffering(term=item[3], instructor=item[6], start_time=begin_time, end_time=end_time, days=days, room=item[7], section_num = 1, course_id=course)
         course_offering.save()
         program.save()
         program.courses.add(course_offering)
