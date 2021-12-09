@@ -1,5 +1,5 @@
 # Ignore migrations for now since they are auto generated
-src/majorizer/migrations
+src/majorizer/migrations/
 .idea/
 
 # Byte-compiled / optimized / DLL files

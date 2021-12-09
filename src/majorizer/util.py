@@ -17,7 +17,17 @@ def time_range(start, end, delta):
         yield current.time()
         current += timedelta(minutes=delta)
 
+times = [t for t in time_range(time(8), time(21, 30), 30)]
+
+def init_timeslots(timeslots):
+    timeslots.clear()
+    for t in times:
+        timeslots.append(TimeSlot(t))
+
 def schedule_to_timeslots(schedule, timeslots):
+
+    init_timeslots(timeslots)
+
     for course in schedule.courses.all():
         days = course.days.split(",")
         start = course.start_time
@@ -26,9 +36,9 @@ def schedule_to_timeslots(schedule, timeslots):
         for index, timeslot in enumerate(timeslots):
             for day in days:
                 if (timeslot.time == start):
-                    timeslot.classes[int(day)] = course.course_id.name
-                elif ((timeslots[index-1].classes[int(day)] == course.course_id.name or timeslots[index-1].classes[int(day)] == "up") and timeslot.time <= end):
-                    timeslot.classes[int(day)] = course.course_id.name
+                    timeslot.classes[int(day)] = (course.course_id.name, course.id)
+                elif (timeslots[index-1].classes[int(day)][0] == course.course_id.name and timeslot.time <= end):
+                    timeslot.classes[int(day)] = (course.course_id.name, course.id)
         #This section calculates the correct rowspan for the html table elements (Currently doesn't work for schedules with more than one class)
         # for index, timeslot in enumerate(timeslots):
         #     for day in days:
@@ -40,13 +50,48 @@ def schedule_to_timeslots(schedule, timeslots):
 
 def search_classes(search_term):
     search_term = search_term.upper()
-    results = DBCourse.objects.filter(course_number__contains=search_term).values()
-    return results
+    results =  DBCourse.objects.filter(course_number__contains=search_term).values()
+    output = []
+    for r in results:
+        output.append(CourseSearchResult(r))
+    return output
 
-def get_course_offerings(c_id):
-    print(c_id)
-    results = DBCourseOffering.objects.filter(course_id__pk = c_id).values()
-    return results
+def get_course_offerings(c_id, schedule):
+    already_in_schedule = schedule.courses.all()
+    # Users can't add courses that are already in the active schedule
+    return DBCourseOffering.objects.filter(course_id__pk = c_id).exclude(id__in=already_in_schedule).values()
+
+def get_majors():
+    return DBDegreeProgram.objects.filter(is_major=True).values()
+
+def get_minors():
+    return DBDegreeProgram.objects.filter(is_major=False).values()
+
+def get_prereqs(course):
+    c = DBCourse.objects.get(course_id = course['course_id'])
+    return c.prereqs.all()
+
+def add_course_to_schedule(course_offering, schedule):
+    schedule.courses.add(course_offering)
+
+def remove_course_from_schedule(course_offering, schedule):
+    schedule.courses.remove(course_offering)
+
+def create_user(full_name, uname, pword, grad_semester, grad_year, degree_programs):
+    new_user = User.objects.create_user(first_name=full_name, username=uname, password=pword)
+    new_student, _ = DBStudent.objects.get_or_create(name=full_name, grad_term=(grad_semester + str(grad_year)))
+
+    # Expecting strings, need ints
+    for d in degree_programs:
+        d = int(d)
+    
+    degrees = DBDegreeProgram.objects.filter(pk__in=degree_programs)
+    for d in degrees:
+        new_student.degrees.add(d)
+
+    new_majorizer_user, _ = DBUser.objects.get_or_create(user=new_user, student_id=new_student)
+
+    return new_majorizer_user
 
 def parse(file):
     df = reader.read_csv(file)
@@ -94,3 +139,8 @@ class TimeSlot:
         self.time = time
         self.classes = ["none"] * 5  # Indices 0-4 represent Mon-Fri
         #self.rowspan = 1  # This probably doesn't work here. Classes should store their own rowspans maybe?
+
+class CourseSearchResult:
+    def __init__(self, course):
+        self.course = course
+        self.prereqs = get_prereqs(course)
