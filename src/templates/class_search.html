@@ -16,7 +16,19 @@
             <form method="post">
                 {% csrf_token %}
                 {% for r in class_search_results %}
-                    <p><button class="btn btn-outline-info" type="submit" value="{{ r.course_id }}" name="class_search_result_button">{{ r.name }} | {{ r.course_number }}</button></p>
+                    <p><button class="btn btn-outline-info" type="submit" value="{{ r.course.course_id }}" name="class_search_result_button" style="padding-top: 0px; padding-bottom: 0px;">
+                        <div class="row" style="padding: 8px;">{{ r.course.name }} | {{ r.course.course_number }}</div>
+                        {% if r.prereqs %}
+                            <div class="row" style="padding: 8px; background-color: rgb(61, 69, 88);"> 
+                                Prerequisites:
+                                <ul>
+                                    {% for p in r.prereqs %}
+                                        <li>{{ p.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </button></p>
                 {% endfor %}
             </form>
         </div>
