@@ -1,5 +1,9 @@
 from datetime import time, timedelta, datetime
+
+from django.db.models.expressions import Case
 from majorizer.models import *
+import pandas as reader
+import re
 
 def time_range(start, end, delta):
     # https://stackoverflow.com/questions/39298054/generating-15-minute-time-interval-array-in-python
@@ -43,6 +47,47 @@ def get_course_offerings(c_id):
     print(c_id)
     results = DBCourseOffering.objects.filter(course_id__pk = c_id).values()
     return results
+
+def parse(file):
+    df = reader.read_csv(file)
+    program = df[0,0]
+    df.drop(index=0, inplace=True)
+
+
+    for item in df:
+        time = str(item[2])
+        if time == "N/A":
+            time = -1
+            end_time = begin_time = time
+        elif time.startswith('L'):
+            time = time[:2]
+            time_array = filter(None, time.split(" "))
+            days = filter(None, re.split("([A-Z][^A-Z]*)", time_array[0]))
+            for day in days:
+                switch = {
+                    "M":0,
+                    "T":1,
+                    "Tu":1,
+                    "w":2,
+                    "Th":3,
+                    "R":3,
+                    "F":4
+                }
+                day = switch.get(day)
+
+            time_array = filter(None, time.split("-"))
+            begin_time = datetime.strptime(time_array[0], "%H:%M")
+            end_time = datetime.strptime(time_array[1], "%H:%M")
+
+        course = DBCourse(course_id=item[8], name=item[1], course_number=item[0])
+        course.save()
+
+        course_offering = DBCourseOffering(term=item[3], instructor=item[6], start_time=begin_time, end_time=end_time, days=days, room=item[6], section_num = 1, course_id=course)
+        course_offering.save()
+        program.save()
+        program.courses.add(course_offering)
+    
+
 
 class TimeSlot:
     def __init__(self, time) -> None:
