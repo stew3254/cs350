@@ -21,8 +21,10 @@ from majorizer import views
 from majorizer.views import home_view
 
 api = routers.DefaultRouter()
-api.register(r'users', views.UserViewSet)
-api.register(r'groups', views.GroupViewSet)
+api.register('schedules', views.ScheduleViewSet)
+api.register('courses', views.CourseViewSet)
+api.register('offerings', views.CourseOfferingViewSet)
+api.register('students', views.StudentViewSet)
 
 urlpatterns = [
     path('', home_view, name='home'),
