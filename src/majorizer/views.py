@@ -102,14 +102,26 @@ def home_view(request):
 
         elif "new_schedule_button" in request.POST:
             new_schedule_name = request.POST['new_schedule_name']
-            new_schedule, _ = DBSchedule.objects.get_or_create(name=new_schedule_name, student_id=majorizer_user.student_id)
+            new_schedule_semester = True if request.POST['new_schedule_semester'] == 'F' else False
+            new_schedule_year = request.POST['new_schedule_year']
+
+            new_schedule, _ = DBSchedule.objects.get_or_create(name=new_schedule_name, student_id=majorizer_user.student_id,
+                                                               is_fall_semester = new_schedule_semester, year = new_schedule_year)
+
             schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
+            active_schedule = new_schedule
+            request.session['selected_schedule_id'] = active_schedule.id
 
         elif "schedule_select_button" in request.POST:
             selected_schedule = request.POST['schedules']
             active_schedule = DBSchedule.objects.get(id=selected_schedule)
             request.session['selected_schedule_id'] = active_schedule.id
             schedule_to_timeslots(active_schedule, timeslots)
+
+        elif "schedule_delete_button" in request.POST:
+            active_schedule.delete()
+            request.session.pop('selected_schedule_id')
+            schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
 
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form

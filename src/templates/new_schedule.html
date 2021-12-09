@@ -1,0 +1,15 @@
+<div class="row input-group">
+    <div class="col input-group">
+        <span class="input-group-text">New Schedule Name</span>
+        <input type="text" class="form-control" placeholder="Name" maxlength="64" name="new_schedule_name">
+        <span class="input-group-text">Schedule Term</span>
+        <select id="grad_term" class='form-control' name="new_schedule_semester">
+            <option value="F">Fall</option>
+            <option value="S">Spring</option>
+        </select>
+        <input type="number" min="1900" max="2099" step="1" value="2021" class="form-control" name="new_schedule_year"/>
+    </div>
+</div>
+<div class="float-end" style="padding: 22px;">
+    <button type="submit" class="btn btn-outline-info btn-sm float-right" style="padding: 8px;" name="new_schedule_button">Create New Schedule</button>
+</div>

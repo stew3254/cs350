@@ -42,11 +42,12 @@ class DBStudent(models.Model):
     grad_term = models.CharField(max_length=6)
     degrees = models.ManyToManyField(DBDegreeProgram)
 
-
 class DBSchedule(models.Model):
     name = models.CharField(max_length=64)
     student_id = models.ForeignKey(DBStudent, models.DO_NOTHING)
     courses = models.ManyToManyField(DBCourseOffering)
+    is_fall_semester = models.BooleanField(default=True)
+    year = models.IntegerField(default=0)
 
 
 class DBAdvisor(models.Model):
