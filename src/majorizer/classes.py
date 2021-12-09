@@ -1,5 +1,5 @@
 # from models import *
-from src.majorizer.models import *
+from majorizer.models import *
 
 
 def _get_data(obj) -> dict:
@@ -9,7 +9,7 @@ def _get_data(obj) -> dict:
     :return: Dictionary where the key is the field name and the value is the object's field value
     """
 
-    return {e: getattr(obj, e) for e in dir(obj) if not e.startswith("_") and not callable(getattr(obj, e))}
+    return {e: getattr(obj, e) for e in dir(obj) if not e.startswith("_") and e != "objects" and not callable(getattr(obj, e))}
 
 
 class ABC:
@@ -33,7 +33,7 @@ class ABC:
         # If an object is passed in, ignore everything else
         if obj is not None:
             # Set data from object to the same as this object
-            for k, v in _get_data(obj):
+            for k, v in _get_data(obj).items():
                 self.__setattr__(k, v)
 
         # No object passed in, so just take keyword args and make our own new object
@@ -59,6 +59,12 @@ class ABC:
                 name += c
         return name
 
+    def to_json(self) -> dict:
+        return _get_data(self)
+
+    def db(self):
+        return self.__getattribute__(self.__getname()).__class__
+
 
 class Department(ABC):
 
@@ -81,6 +87,9 @@ class Course(ABC):
         if obj is None:
             # Special since courses are instances of course offerings
             self._course_offering = DBCourseOffering(**_get_data(self))
+
+    def db(self):
+        return self.__getattribute__(self._course_offering).__class__
 
 
 class Major(ABC):
