@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from majorizer.models import *
 from majorizer.util import *
 from django.contrib.auth import authenticate, login, logout
-
+from django.contrib.auth.models import Group
+from rest_framework import viewsets
+from rest_framework import permissions
 from .forms import ClassSearchForm, LoginForm
-
+from .serializers import *
+from datetime import time
 from django.http import HttpResponse
 
-from datetime import time
 
 timeslots = []
 init_timeslots(timeslots)
@@ -122,6 +124,7 @@ def home_view(request):
 
     return render(request, "home.html", context_dict)
 
+
 def register_view(request):
     context_dict = {}
 
@@ -151,3 +154,39 @@ def register_view(request):
     context_dict['minors'] = get_minors()
 
     return render(request, "register.html", context_dict)
+  
+
+class ScheduleViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = DBSchedule.objects.all()
+    serializer_class = ScheduleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class CourseViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = DBCourse.objects.all()
+    serializer_class = CourseSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+
+
+class CourseOfferingViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = DBCourseOffering.objects.all()
+    serializer_class = CourseOfferingSerializer
+    # permission_classes = [permissions.IsAuthenticated]
+
+
+class StudentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = DBStudent.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [permissions.IsAuthenticated]
