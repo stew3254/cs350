@@ -15,12 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+from majorizer import views
 
 from majorizer.views import home_view, register_view
 
+api = routers.DefaultRouter()
+api.register('schedules', views.ScheduleViewSet)
+api.register('courses', views.CourseViewSet)
+api.register('offerings', views.CourseOfferingViewSet)
+api.register('students', views.StudentViewSet)
+
 urlpatterns = [
+    path('', home_view, name='home'),
+    path('api/', include(api.urls)),
     path('admin/', admin.site.urls),
     path('auth/', include('django.contrib.auth.urls')),
-    path('', home_view, name='home'),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('register/', register_view, name='register'),
 ]

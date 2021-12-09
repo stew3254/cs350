@@ -15,7 +15,7 @@ class DBCourse(models.Model):
     course_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=64)
     course_number = models.CharField(max_length=8, unique=True)
-    equiv_attr = models.SmallIntegerField(null=True)
+    equiv_attr = models.SmallIntegerField(blank=True, null=True)
     prereqs = models.ManyToManyField("DBCourse", symmetrical=False)
 
 
@@ -67,8 +67,8 @@ class DBComment(models.Model):
 
 class DBUser(models.Model):
     user = models.OneToOneField(User, models.CASCADE)
-    student_id = models.ForeignKey(DBStudent, models.DO_NOTHING, null=True)
-    advisor_id = models.ForeignKey(DBAdvisor, models.DO_NOTHING, null=True)
+    student_id = models.ForeignKey(DBStudent, models.DO_NOTHING, blank=True, null=True)
+    advisor_id = models.ForeignKey(DBAdvisor, models.DO_NOTHING, blank=True, null=True)
 
 '''
 @receiver(post_save, sender=DBUser)
