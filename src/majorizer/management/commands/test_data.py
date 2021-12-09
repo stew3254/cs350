@@ -20,10 +20,15 @@ def test_data():
     test_department, _ = DBDepartment.objects.get_or_create(name="Test Department")
 
     test_course, _ = DBCourse.objects.get_or_create(course_id=1234, name="Test Course", course_number="TEST1234")
+    test_course2, _ = DBCourse.objects.get_or_create(course_id=4321, name="Test Course 2", course_number="TEST4321")
+    test_course.prereqs.add(test_course2)
 
     test_offering, _ = DBCourseOffering.objects.get_or_create(term="F21", instructor="Professor McTeacherson", start_time=time(11),
                                             end_time=time(12, 30), days="0,2,4", room="bathroom", section_num=1,
                                             course_id=test_course)
+    test_offering2, _ = DBCourseOffering.objects.get_or_create(term="F21", instructor="Professor McTeacherson", start_time=time(14),
+                                            end_time=time(15, 30), days="1,3", room="bathroom", section_num=1,
+                                            course_id=test_course2)
 
     test_degree, _ = DBDegreeProgram.objects.get_or_create(is_major=True, department_id=test_department)
     test_degree.courses.add(test_course)

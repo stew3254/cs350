@@ -14,6 +14,7 @@ class DBCourse(models.Model):
     name = models.CharField(max_length=64)
     course_number = models.CharField(max_length=8, unique=True)
     equiv_attr = models.SmallIntegerField(null=True)
+    prereqs = models.ManyToManyField("DBCourse", symmetrical=False)
 
 
 class DBCourseOffering(models.Model):

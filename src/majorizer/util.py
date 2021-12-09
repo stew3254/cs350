@@ -48,10 +48,15 @@ def schedule_to_timeslots(schedule, timeslots):
 
 def search_classes(search_term):
     search_term = search_term.upper()
-    return DBCourse.objects.filter(course_number__contains=search_term).values()
+    results =  DBCourse.objects.filter(course_number__contains=search_term).values()
+    output = []
+    for r in results:
+        output.append(CourseSearchResult(r))
+    return output
 
 def get_course_offerings(c_id, schedule):
     already_in_schedule = schedule.courses.all()
+    # Users can't add courses that are already in the active schedule
     return DBCourseOffering.objects.filter(course_id__pk = c_id).exclude(id__in=already_in_schedule).values()
 
 def get_majors():
@@ -59,6 +64,10 @@ def get_majors():
 
 def get_minors():
     return DBDegreeProgram.objects.filter(is_major=False).values()
+
+def get_prereqs(course):
+    c = DBCourse.objects.get(course_id = course['course_id'])
+    return c.prereqs.all()
 
 def add_course_to_schedule(course_offering, schedule):
     schedule.courses.add(course_offering)
@@ -80,10 +89,15 @@ def create_user(full_name, uname, pword, grad_semester, grad_year, degree_progra
 
     new_majorizer_user, _ = DBUser.objects.get_or_create(user=new_user, student_id=new_student)
 
-    return new_majorizer_user;
+    return new_majorizer_user
 
 class TimeSlot:
     def __init__(self, time) -> None:
         self.time = time
         self.classes = ["none"] * 5  # Indices 0-4 represent Mon-Fri
         #self.rowspan = 1  # This probably doesn't work here. Classes should store their own rowspans maybe?
+
+class CourseSearchResult:
+    def __init__(self, course):
+        self.course = course
+        self.prereqs = get_prereqs(course)

@@ -12,10 +12,6 @@ from datetime import time
 timeslots = []
 init_timeslots(timeslots)
 
-test_schedule = DBSchedule.objects.filter(name="Test Schedule")[0]
-
-print("\n\nTest")
-
 # Create your views here.
 def home_view(request):
     login_form = LoginForm()
@@ -23,8 +19,7 @@ def home_view(request):
 
     django_user = request.user
     logged_in = django_user.is_authenticated
-    
-    
+        
     if logged_in:
         majorizer_user = DBUser.objects.get(user=django_user)
         schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
@@ -47,10 +42,7 @@ def home_view(request):
     class_search_results = []
     offerings = None
     selected_class = None
-    
 
-    #active_schedule = test_schedule
-    #active_schedule.refresh_from_db()
 
     context_dict = {}
 
@@ -65,10 +57,12 @@ def home_view(request):
                 if django_user is not None:
                     login(request, django_user)
                     logged_in = True
+                    majorizer_user = DBUser.objects.get(user=django_user)
+                    schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
                 else:
                     print("\nno such user!\n")
-                majorizer_user = DBUser.objects.get(user=django_user)
-                schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
+                    logged_in = False
+                
                 if schedules:
                     if "selected_schedule_id" in request.session:
                         active_schedule = DBSchedule.objects.get(id=request.session['selected_schedule_id'])
@@ -117,7 +111,6 @@ def home_view(request):
 
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form
-    context_dict['name'] = name
     context_dict['timeslots'] = timeslots
     context_dict['class_search_term'] = class_search_term
     context_dict['class_search_results'] = class_search_results
