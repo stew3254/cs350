@@ -117,21 +117,27 @@ def parse(file):
             days = filter(None, re.split("([A-Z][^A-Z]*)", time_array[0]))
             for day in days:
                 switch = {
-                    "M":0,
-                    "T":1,
-                    "Tu":1,
-                    "w":2,
-                    "Th":3,
-                    "R":3,
-                    "F":4
+                    "M": 0,
+                    "T": 1,
+                    "Tu": 1,
+                    "w": 2,
+                    "Th": 3,
+                    "R": 3,
+                    "F": 4
                 }
                 day = switch.get(day)
 
             time_array = filter(None, time.split("-"))
             begin_time = datetime.strptime(time_array[0], "%H:%M")
             end_time = datetime.strptime(time_array[1], "%H:%M")
+        
+        prereqs = item[5]
+        prereqs = filter(None, prereqs.split(';'))
+        for item in prereqs:
+            item = filter(None, prereqs.split(','))
+        
 
-        course = DBCourse(course_id=item[8], name=item[1], course_number=item[0])
+        course = DBCourse(course_id=-1, name=item[1], course_number=item[0])
         course.save()
 
         course_offering = DBCourseOffering(term=item[3], instructor=item[6], start_time=begin_time, end_time=end_time, days=days, room=item[7], section_num = 1, course_id=course)
