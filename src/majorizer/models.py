@@ -48,6 +48,7 @@ class DBSchedule(models.Model):
     courses = models.ManyToManyField(DBCourseOffering)
     is_fall_semester = models.BooleanField(default=True)
     year = models.IntegerField(default=0)
+    is_valid = models.BooleanField(default=True)
 
 
 class DBAdvisor(models.Model):

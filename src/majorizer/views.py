@@ -120,9 +120,11 @@ def home_view(request):
 
         elif "schedule_delete_button" in request.POST:
             active_schedule.delete()
-            request.session.pop('selected_schedule_id')
+            if "selected_schedule_id" in request.session:
+                request.session.pop('selected_schedule_id')
             schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
 
+    context_dict['current_page'] = 'home'
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form
     context_dict['timeslots'] = timeslots
@@ -159,7 +161,7 @@ def register_view(request):
 
         return redirect("/")
 
-
+    context_dict['current_page'] = 'register'
     context_dict['registration_form'] = registration_form
     context_dict['login_form'] = login_form
     context_dict['majors'] = get_majors()
@@ -167,6 +169,24 @@ def register_view(request):
 
     return render(request, "register.html", context_dict)
   
+def profile_view(request):
+    logged_in = request.user.is_authenticated
+
+    if logged_in:
+        django_user = request.user
+        majorizer_user = DBUser.objects.get(user = django_user)
+        student = majorizer_user.student_id
+        degrees = student.degrees.all()
+        schedules = DBSchedule.objects.filter(student_id = student)
+
+    context_dict = {}
+    context_dict['current_page'] = 'profile'
+    context_dict['logged_in'] = logged_in
+    context_dict['student'] = student
+    context_dict['degrees'] = degrees
+    context_dict['schedules'] = schedules
+
+    return render(request, "profile.html", context_dict)
 
 class ScheduleViewSet(viewsets.ModelViewSet):
     """

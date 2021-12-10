@@ -18,7 +18,7 @@ from django.urls import path, include
 from rest_framework import routers
 from majorizer import views
 
-from majorizer.views import home_view, register_view
+from majorizer.views import home_view, register_view, profile_view
 
 api = routers.DefaultRouter()
 api.register('schedules', views.ScheduleViewSet)
@@ -33,4 +33,5 @@ urlpatterns = [
     path('auth/', include('django.contrib.auth.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('register/', register_view, name='register'),
+    path('profile/', profile_view, name='profile'),
 ]
