@@ -77,6 +77,45 @@ def add_course_to_schedule(course_offering, schedule):
 def remove_course_from_schedule(course_offering, schedule):
     schedule.courses.remove(course_offering)
 
+def validate_new_schedule(new_schedule_name, new_schedule_semester, new_schedule_year, student):
+    output = []
+    existing_schedules = DBSchedule.objects.filter(student_id=student)
+    if existing_schedules.filter(name=new_schedule_name):
+        output.append("You already have a schedule with this name!") 
+    if existing_schedules.filter(is_fall_semester=new_schedule_semester).filter(year=new_schedule_year):
+        output.append("You already have a schedule for this term!") 
+
+    return output
+
+def validate_prerequisites_met(course, student, active_schedule):
+    current_is_fall = active_schedule.is_fall_semester
+    current_year = active_schedule.year
+    prereqs = course.prereqs.all()
+    output = []
+    if len(prereqs) == 0:
+        return output
+
+
+    courses_taken = []
+    # Only search semesters before current
+    if current_is_fall:
+        schedules = DBSchedule.objects.filter(student_id=student).filter(year__lt=current_year)
+    else:
+        schedules = DBSchedule.objects.filter(student_id=student).filter(year__lt=current_year).filter(is_fall=True)
+
+    for s in schedules:
+        courses = s.courses.all()
+        for c in courses:
+            courses_taken.append(c.course_id)
+
+    for p in prereqs:
+        if p not in courses_taken:
+            output.append(f"Prerequisite not met: {p.course_number}")
+    
+    return output
+    
+    
+
 def create_user(full_name, uname, pword, grad_semester, grad_year, degree_programs):
     new_user = User.objects.create_user(first_name=full_name, username=uname, password=pword)
     new_student, _ = DBStudent.objects.get_or_create(name=full_name, grad_term=(grad_semester + str(grad_year)))
