@@ -3,8 +3,7 @@ from majorizer.models import *
 from majorizer.util import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, permissions, status, response
 from .forms import ClassSearchForm, LoginForm
 from .serializers import *
 from datetime import time
@@ -164,6 +163,15 @@ class ScheduleViewSet(viewsets.ModelViewSet):
     serializer_class = ScheduleSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        return DBSchedule.objects.all()
+
+    def retrieve(self, request, pk=None):
+        serializer = self.get_serializer_class()
+        instance = request.user.stories
+        data = serializer(instance=instance, many=True)
+        return response.Response(data, status=status.HTTP_200_OK)
+
 
 class CourseViewSet(viewsets.ModelViewSet):
     """
@@ -171,7 +179,15 @@ class CourseViewSet(viewsets.ModelViewSet):
     """
     queryset = DBCourse.objects.all()
     serializer_class = CourseSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return DBCourse.objects.all()
+
+    def retrieve(self, request, pk=None):
+        serializer = self.get_serializer_class()
+        instance = request.user.stories
+        data = serializer(instance=instance, many=True)
+        return response.Response(data, status=status.HTTP_200_OK)
 
 
 class CourseOfferingViewSet(viewsets.ModelViewSet):
