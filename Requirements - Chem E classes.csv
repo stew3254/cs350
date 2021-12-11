@@ -1,0 +1,25 @@
+Course code,Course name ,Times,Term,Replacements,Prerequistes ,Professor,Room
+CH 1,Chemical Engineering Elective,N/A,N/A,N/A,N/A,N/A,N/A
+CH 2,Chemical Engineering Elective,N/A,N/A,N/A,N/A,N/A,N/A
+CH 210,Molecular Properties ,LEC TuTh 4:30-5:45,Fall,N/A,"CM 132 (or CM104), MA 132, PH131",Yuncheng Du,162 Science Center
+CH 220,Material Balances ,LEC TuTh 3:00-4:15,Fall,N/A,"CM 132 (or CM104), MA 132, PH131",Taeyoung Kim,177 CAMP
+CH 260,Thermodynamices & Energy Balances,LEC TuTh 4:30-5:45,Spring,N/A,CH 210,Elizabeth Podlaha-Murphy,213 Snell Hall
+CH 320,Phase Equilibria,LEC MWF 11:00-11:50,Spring,N/A,CH 210 or ES340,Ross Taylor,214 Snell Hall
+CH 330,Transfer Process Fundamentals ,LEC MWF 4:00-4:50,Given When Needed,N/A,"MA 232, coregs: CH 210, CH 220",Ian T. McCrum,B10L Snell Hall
+CH 350,Chemical Engineering Laboratory,LAB Tu 1:30-4:30,Spring,N/A,CH 330,Joshua Edward Bennett,179 CAMP
+CH 360,Chemical Reactor Analysis I,LEC MW 11:00-12:15,Spring,N/A,"CH 330, CH 210",Eunsu Paek,176 CAMP
+CH 370,Transfer Process Design ,LEC MWF 8:00-8:50,Spring,N/A,CH 330,Ross Taylor,214 Snell Hall
+CH 390,Undergraduate Research Project,N/A,Every ,N/A,N/A,N/A,N/A
+CH 391,Undergraduate Research Project,N/A,Every,N/A,N/A,N/A,N/A
+CH 392,Undergraduate Research Project,N/A,Every,N/A,N/A,N/A,N/A
+CH 410,Chemical Engineering Laboratory,LAB Tu 11:30-5:30,Fall,N/A,CH 330,Joshua Edward Bennett,184 CAMP
+CH 420,Process Economics & Conceptual Design,LEC MW 1:00-1:50,Fall,N/A,"CH 330, coreqs: EC350 or (EC150 or EC151 and EC200)",Ross Taylor,244 Rowley Lab
+CH 420,Process Economics & Conceptual Design,LAB MW 2:00-3:15,Fall,N/A,"CH 330, coreqs: EC350 or (EC150 or EC151 and EC200)",Ross Taylor,172 CAMP
+CH 430,Chemical Process Safety ,LEC MWF 2:00-2:50,Fall,N/A,N/A,Joshua Edward Bennett,102 ERC
+CH 440,Plasma Engineering,LEC MWF 4:00-4:50,Fall,N/A,"CH 330, CH 360",Selma Mededovic,342 Science Center
+CH 441,Introduction of Nanophotonics,LEC TuTh 4:00-5:15,Fall,N/A,"PH 132, MA232",Zijie Yan,268 CAMP
+CH 456,Experimental Projects,N/A,Every,N/A,N/A,Ruth E. Baltus,N/A
+CH 460,Process Dynamics and Control,LEC TuTh 11:00-12:15,Spring,N/A,"CH 220, CH 330, MA 231",Yuncheng Du,163 CAMP
+CH 465,Biochemical Engineering,LEC MWF 4:00-4:50,Spring,N/A,CH 330,Bethany Almeida,118 Snell Hall
+CH 482,Design Project,N/A,Every,N/A,N/A,Ross Taylor,N/A
+CH 490,Elementary Transport Phenomena,LEC MW 7:00-8:15,Spring,N/A,CH 330 and (3.5 GPA/instructor approval),Simona Liguori,268 CAMP
