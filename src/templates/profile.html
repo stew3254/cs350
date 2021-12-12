@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='container'>
+    <div class="block">
+        <div style="padding: 8px;">
+            <div class="row">
+                <h5 style="color: white;">Your Profile</h5>
+            </div>
+            <div class="row">
+                <div class="col" style="max-width: 20%;">
+                    <div class="card" style="background-color: rgb(108, 122, 122);">
+                        <div style="background-color: cadetblue; padding: 8px;">{{ student.name }}</div>
+                        <div style="padding: 8px;">
+                            <p>Graduating: {{ student.grad_term }}</p>
+                            Majors:
+                            <ul>
+                                {% for d in degrees %}
+                                    {% if d.is_major %}
+                                        <li>{{ d.name }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            Minors:
+                            <ul>
+                                {% for d in degrees %}
+                                    {% if not d.is_major %}
+                                        <li>{{ d.name }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="background-color: rgb(108, 122, 122);">
+                        <div style="background-color: cadetblue; padding: 8px;">Schedules</div>
+                        <div style="padding: 8px;">
+                            {% if schedules %}
+                                <table class="table table-dark table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Schedule</th>
+                                            <th>Semester</th>
+                                            <th>Year</th>
+                                            <th>Valid</th>
+                                        </tr>
+                                    </thead>
+                                    {% for s in schedules %}
+                                    <tr>
+                                        <td>{{ s.name }}</td>
+                                        <td>{% if s.is_fall_semester %} Fall {% else%} Spring {% endif %}</td>
+                                        <td>{{ s.year }}</td>
+                                        <td>{{ s.is_valid }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            {% else %}
+                                No Schedules
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

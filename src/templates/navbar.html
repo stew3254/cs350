@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
             <a href="/" class="navbar-brand"><img src="/static/images/majorizer_logo.png"></a>
-            {% if not logged_in %}
+            {% if not logged_in and current_page == 'home' %}
             <div class="row">
                 <div class="col">
                     {% include 'registration/login.html' %}
@@ -10,7 +10,7 @@
                     <a href="/register" class="btn btn-outline-info btn-sm" style="padding: 8px;">Register</a>
                 </div>
             </div>
-            {% else %}
+            {% elif  current_page == 'home' %}
                 <div class="row">
                     <div class="col">
                         <form method="POST">
@@ -18,7 +18,11 @@
                             <button type="submit" name="logout_button" class="btn btn-outline-danger">Log Out</button>
                         </form>
                     </div>
-                    <h6 style="color: white;" class="col">Logged in as {{ user.username }}</h6>
+                    <h6 style="color: white;" class="col"><a href="/profile" class="navbar-brand"><img src="/static/images/profile_icon-01.png"> {{ user.username }}</a></h6>
+                </div>
+            {% elif  current_page == 'profile' and logged_in %}
+                <div class="row">
+                    <h6 style="color: white;" class="col"><a href="/profile" class="navbar-brand"><img src="/static/images/profile_icon-01.png"> {{ user.username }}</a></h6>
                 </div>
             {% endif %}
     </div>

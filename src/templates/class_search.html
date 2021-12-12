@@ -6,7 +6,23 @@
             <button type="submit" name="class_search_button" class="btn btn-outline-primary">Search</button>
         </div>
     </form>
-    
+
+    {% if course_offering_message %}
+    <br>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div style="background-color: rgb(243, 6, 6); padding: 8px; color: white;">Could not add course because: </div>
+                <div style="padding: 8px;">
+                    {% for m in course_offering_message %}
+                        <p>{{m}}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {% if class_search_results %}
     <div class="card" style="background-color: #464747;">
         <div style="padding: 8px;">

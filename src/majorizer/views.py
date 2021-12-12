@@ -96,21 +96,33 @@ def home_view(request):
             schedule_to_timeslots(active_schedule, timeslots)
 
         elif "course_offering_button" in request.POST:
-            course_to_add = request.POST['course_offering_button']
-            add_course_to_schedule(course_to_add, active_schedule)
-            schedule_to_timeslots(active_schedule, timeslots)
+            course_offering_to_add = request.POST['course_offering_button']
+            course = DBCourseOffering.objects.get(pk=course_offering_to_add).course_id
+
+            course_offering_message = validate_prerequisites_met(course, majorizer_user.student_id, active_schedule)
+            print(course_offering_message)
+            if not course_offering_message:
+                add_course_to_schedule(course_offering_to_add, active_schedule)
+                schedule_to_timeslots(active_schedule, timeslots)
+            else:
+                context_dict['course_offering_message'] = course_offering_message
 
         elif "new_schedule_button" in request.POST:
             new_schedule_name = request.POST['new_schedule_name']
             new_schedule_semester = True if request.POST['new_schedule_semester'] == 'F' else False
             new_schedule_year = request.POST['new_schedule_year']
 
-            new_schedule, _ = DBSchedule.objects.get_or_create(name=new_schedule_name, student_id=majorizer_user.student_id,
-                                                               is_fall_semester = new_schedule_semester, year = new_schedule_year)
+            new_schedule_message = validate_new_schedule(new_schedule_name, new_schedule_semester, new_schedule_year, majorizer_user.student_id)
+            
+            if not new_schedule_message:
+                new_schedule, _ = DBSchedule.objects.get_or_create(name=new_schedule_name, student_id=majorizer_user.student_id,
+                                                                is_fall_semester = new_schedule_semester, year = new_schedule_year)
 
-            schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
-            active_schedule = new_schedule
-            request.session['selected_schedule_id'] = active_schedule.id
+                schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
+                active_schedule = new_schedule
+                request.session['selected_schedule_id'] = active_schedule.id
+            else:
+                context_dict['new_schedule_message'] = new_schedule_message
 
         elif "schedule_select_button" in request.POST:
             selected_schedule = request.POST['schedules']
@@ -120,9 +132,14 @@ def home_view(request):
 
         elif "schedule_delete_button" in request.POST:
             active_schedule.delete()
-            request.session.pop('selected_schedule_id')
+            if "selected_schedule_id" in request.session:
+                request.session.pop('selected_schedule_id')
             schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
+            if schedules:
+                active_schedule = schedules.first()
+                request.session['selected_schedule_id'] = active_schedule.id
 
+    context_dict['current_page'] = 'home'
     context_dict['login_form'] = login_form
     context_dict['class_search_form'] = class_search_form
     context_dict['timeslots'] = timeslots
@@ -159,7 +176,7 @@ def register_view(request):
 
         return redirect("/")
 
-
+    context_dict['current_page'] = 'register'
     context_dict['registration_form'] = registration_form
     context_dict['login_form'] = login_form
     context_dict['majors'] = get_majors()
@@ -167,6 +184,24 @@ def register_view(request):
 
     return render(request, "register.html", context_dict)
   
+def profile_view(request):
+    logged_in = request.user.is_authenticated
+
+    if logged_in:
+        django_user = request.user
+        majorizer_user = DBUser.objects.get(user = django_user)
+        student = majorizer_user.student_id
+        degrees = student.degrees.all()
+        schedules = DBSchedule.objects.filter(student_id = student)
+
+    context_dict = {}
+    context_dict['current_page'] = 'profile'
+    context_dict['logged_in'] = logged_in
+    context_dict['student'] = student
+    context_dict['degrees'] = degrees
+    context_dict['schedules'] = schedules
+
+    return render(request, "profile.html", context_dict)
 
 class ScheduleViewSet(viewsets.ModelViewSet):
     """
