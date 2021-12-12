@@ -1,6 +1,7 @@
 import json
 
 from majorizer.models import *
+from majorizer.util import parse, new_parse
 from datetime import time
 
 from django.core.management.base import BaseCommand, CommandError
@@ -11,7 +12,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         try:
-            import_data(name=kwargs.get("name"))
+            import_data("cs_classes.csv")
+            import_data("chem_e_classes.csv")
         except Exception as e:
             raise CommandError(f'Initalization failed due to error: {e}')
 
@@ -52,5 +54,5 @@ def import_data(name=None):
     if name is None:
         test_data()
     else:
-        data = json.loads(open(name, "r").read())
-        # TODO implement this function
+        # parse(name)
+        new_parse(name)

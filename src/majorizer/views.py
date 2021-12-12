@@ -10,9 +10,9 @@ from .serializers import *
 from datetime import time
 from django.http import HttpResponse
 
-
 timeslots = []
 init_timeslots(timeslots)
+
 
 # Create your views here.
 def home_view(request):
@@ -21,7 +21,7 @@ def home_view(request):
 
     django_user = request.user
     logged_in = django_user.is_authenticated
-        
+
     if logged_in:
         majorizer_user = DBUser.objects.get(user=django_user)
         schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
@@ -45,7 +45,6 @@ def home_view(request):
     offerings = None
     selected_class = None
 
-
     context_dict = {}
 
     # Handle forms
@@ -64,7 +63,7 @@ def home_view(request):
                 else:
                     print("\nno such user!\n")
                     logged_in = False
-                
+
                 if schedules:
                     if "selected_schedule_id" in request.session:
                         active_schedule = DBSchedule.objects.get(id=request.session['selected_schedule_id'])
@@ -72,7 +71,7 @@ def home_view(request):
                         active_schedule = schedules[0]
                 else:
                     active_schedule = None
-                
+
 
         elif "logout_button" in request.POST:
             logout(request)
@@ -112,11 +111,14 @@ def home_view(request):
             new_schedule_semester = True if request.POST['new_schedule_semester'] == 'F' else False
             new_schedule_year = request.POST['new_schedule_year']
 
-            new_schedule_message = validate_new_schedule(new_schedule_name, new_schedule_semester, new_schedule_year, majorizer_user.student_id)
-            
+            new_schedule_message = validate_new_schedule(new_schedule_name, new_schedule_semester, new_schedule_year,
+                                                         majorizer_user.student_id)
+
             if not new_schedule_message:
-                new_schedule, _ = DBSchedule.objects.get_or_create(name=new_schedule_name, student_id=majorizer_user.student_id,
-                                                                is_fall_semester = new_schedule_semester, year = new_schedule_year)
+                new_schedule, _ = DBSchedule.objects.get_or_create(name=new_schedule_name,
+                                                                   student_id=majorizer_user.student_id,
+                                                                   is_fall_semester=new_schedule_semester,
+                                                                   year=new_schedule_year)
 
                 schedules = DBSchedule.objects.filter(student_id=majorizer_user.student_id)
                 active_schedule = new_schedule
@@ -170,7 +172,7 @@ def register_view(request):
 
         degree_programs = request.POST.getlist('degree_programs')
 
-        #TODO: Validate username and password
+        # TODO: Validate username and password
 
         create_user(full_name, uname, pword, grad_semester, grad_year, degree_programs)
 
@@ -183,16 +185,17 @@ def register_view(request):
     context_dict['minors'] = get_minors()
 
     return render(request, "register.html", context_dict)
-  
+
+
 def profile_view(request):
     logged_in = request.user.is_authenticated
 
     if logged_in:
         django_user = request.user
-        majorizer_user = DBUser.objects.get(user = django_user)
+        majorizer_user = DBUser.objects.get(user=django_user)
         student = majorizer_user.student_id
         degrees = student.degrees.all()
-        schedules = DBSchedule.objects.filter(student_id = student)
+        schedules = DBSchedule.objects.filter(student_id=student)
 
     context_dict = {}
     context_dict['current_page'] = 'profile'
@@ -202,6 +205,7 @@ def profile_view(request):
     context_dict['schedules'] = schedules
 
     return render(request, "profile.html", context_dict)
+
 
 class ScheduleViewSet(viewsets.ModelViewSet):
     """
