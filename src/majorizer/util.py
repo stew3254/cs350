@@ -101,12 +101,12 @@ Course Number   Course Name   Times   Term   Replacements   Prerequisites   Prof
 
 def parse(file):
     df = reader.read_csv(file)
-    program = df[0,0]
+    program = df[0].iloc(0)
     df.drop(index=0, inplace=True)
 
 
     for item in df:
-        time = str(item[2])
+        time = str(item.iloc(2))
         if time == "N/A":
             time = -1
             end_time = begin_time = time
@@ -131,16 +131,16 @@ def parse(file):
             begin_time = datetime.strptime(time_array[0], "%H:%M")
             end_time = datetime.strptime(time_array[1], "%H:%M")
         
-        prereqs = item[5]
+        prereqs = item.iloc(5)
         prereqs = filter(None, prereqs.split(';'))
         for item in prereqs:
             item = filter(None, prereqs.split(','))
         
 
-        course = DBCourse(course_id=-1, name=item[1], course_number=item[0])
+        course = DBCourse(course_id=-1, name=item.iloc(1), course_number=item.iloc(0))
         course.save()
 
-        course_offering = DBCourseOffering(term=item[3], instructor=item[6], start_time=begin_time, end_time=end_time, days=days, room=item[7], section_num = 1, course_id=course)
+        course_offering = DBCourseOffering(term=item.iloc(3), instructor=item.iloc(6), start_time=begin_time, end_time=end_time, days=days, room=item.iloc(7), section_num = 1, course_id=course)
         course_offering.save()
         program.save()
         program.courses.add(course_offering)
