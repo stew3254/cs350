@@ -12,7 +12,7 @@ class DBDepartment(models.Model):
 
 
 class DBCourse(models.Model):
-    course_id = models.IntegerField(primary_key=True)
+    course_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=64)
     course_number = models.CharField(max_length=8, unique=True)
     equiv_attr = models.SmallIntegerField(blank=True, null=True)
@@ -20,12 +20,12 @@ class DBCourse(models.Model):
 
 
 class DBCourseOffering(models.Model):
-    term = models.CharField(max_length=6)
+    term = models.CharField(max_length=64)
     instructor = models.CharField(max_length=64)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    days = CharField(max_length=9)  # Comma separated list
-    room = models.CharField(max_length=8)
+    start_time = models.CharField(max_length=5)
+    end_time = models.CharField(max_length=5)
+    days = CharField(max_length=16)  # Comma separated list
+    room = models.CharField(max_length=128)
     section_num = models.SmallIntegerField()
     course_id = models.ForeignKey(DBCourse, models.DO_NOTHING)
 

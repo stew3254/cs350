@@ -20,6 +20,8 @@ services:
       - "5000"
     volumes:
       - ./src:/srv/app/src
+      - ./cs_classes.csv:/srv/app/cs_classes.csv
+      - ./chem_e_classes.csv:/srv/app/chem_e_classes.csv
   web:
     image: nginx:latest
     container_name: majorizer_web
