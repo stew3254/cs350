@@ -3,6 +3,7 @@ from datetime import time, timedelta, datetime
 from django.db.models.expressions import Case
 from majorizer.models import *
 import pandas as reader
+import csv
 import re
 
 def time_range(start, end, delta):
@@ -137,6 +138,54 @@ CSV file in the following format
 Course Number   Course Name   Times   Term   Replacements   Prerequisites   Professor   Room   Course ID
 0               1             2       3      4              5               6           7      8
 '''
+
+def new_parse(file):
+    day_map = {
+        "M": 0,
+        "T": 1,
+        "Tu": 1,
+        "W": 2,
+        "Th": 3,
+        "R": 3,
+        "F": 4
+    }
+
+    with open(file, "r") as f:
+        r = csv.DictReader(f)
+        for line in r:
+            time = line.get("times")
+            days = []
+            if time == "N/A" or time.lower() == "transfer":
+                time = -1
+                end_time = begin_time = time
+            else:
+                time_data = time.split(" ")
+                days = [day_map.get(i) for i in time_data[1]]
+                time = time_data[2]
+                time_array = list(filter(None, time.split("-")))
+                begin_time = time_array[0]
+                end_time = time_array[1]
+
+        prereqs = line.get("prerequisites")
+        prereqs = filter(None, prereqs.split(';'))
+
+        course, _ = DBCourse.get_or_create(name = line.get("name"), course_number = line.get("course_number"))
+        course.save()
+
+        course_offering, _ = DBCourseOffering.objects.get_or_create(
+            term = line.get("term")
+            instructor = line.get("instructor")
+            start_time = begin_time
+            end_time = end_time
+            days = days
+            room = line.get("room")
+            section_num = 1
+            course_id = course
+        )
+
+        course_offering.save()
+
+
 
 def parse(file):
     df = reader.read_csv(file)
