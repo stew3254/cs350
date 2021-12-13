@@ -1,0 +1,29 @@
+
+
+Team Name: Condor
+
+Report Number: 15
+
+Reporting Week: 12/6
+
+Summary of work completed in prior week:
+
+Ryan worked on a parser program Jacob worked on scheduling and other fixes to the UI. Kaitlyn worked on the test document and getting data for classes, Jonathan worked on getting some data for classes and working on parser
+
+Summary of work planned for next week:
+
+Continuing to chug along on implementation and touching up design stuff as we go and the project evolves
+
+Open issues and action plan to resolve them:
+
+None we can think of
+
+Project management summary
+
+Team member | Tasks completed | Hours worked for week | Total hours Ryan Stewart | Parser | 5 | 62.5 Jacob Desilets | Worked on the UI and scheduling | 15 | 86.5 Jonathan Nordby | Worked on getting courses and parser | 12 | 54.5 Kaitlyn Witt | Worked on the various docuemnts and got class data| 7.5 | 50
+Meeting summary
+
+For each team meeting provide the date, time, and location of the meeting. Indicate which members attended the meeting and action items discussed in the meeting.
+
+    12/09/21 11:00 ITL - We all met, talked a bit more about implementation, Jonathan started the parser, and we discussed formats for data.
+
