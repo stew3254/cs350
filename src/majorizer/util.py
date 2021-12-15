@@ -179,10 +179,13 @@ def new_parse(file):
                 finish_time = datetime.strptime(time_array[1], "%H:%M").time()
 
             prereqs = line.get("prerequisites")
-            prereqs = filter(None, prereqs.split(';'))
+            prereqs = list(filter(None, prereqs.split(',')))
+            prereqs = list(filter(lambda a: a != "N/A", prereqs))
+            existing_prereqs = DBCourse.objects.filter(course_number__in=prereqs)
 
             course, _ = DBCourse.objects.get_or_create(name = line.get("name"), course_number = line.get("course_number"))
             course.save()
+            course.prereqs.add(*existing_prereqs)
 
             course_offering, _ = DBCourseOffering.objects.get_or_create(
                 term = line.get("term"),
