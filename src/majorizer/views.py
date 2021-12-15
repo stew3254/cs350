@@ -97,10 +97,12 @@ def home_view(request):
         elif "course_offering_button" in request.POST:
             course_offering_to_add = request.POST['course_offering_button']
             course = DBCourseOffering.objects.get(pk=course_offering_to_add).course_id
+            print(course)
 
             course_offering_message = validate_prerequisites_met(course, majorizer_user.student_id, active_schedule)
             print(course_offering_message)
             if not course_offering_message:
+                print("got here!")
                 add_course_to_schedule(course_offering_to_add, active_schedule)
                 schedule_to_timeslots(active_schedule, timeslots)
             else:

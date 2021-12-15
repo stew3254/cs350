@@ -4,6 +4,8 @@ from majorizer.models import *
 from majorizer.util import parse, new_parse
 from datetime import time
 
+import traceback
+
 from django.core.management.base import BaseCommand, CommandError
 
 
@@ -14,7 +16,9 @@ class Command(BaseCommand):
         try:
             import_data("cs_classes.csv")
             import_data("chem_e_classes.csv")
+            test_data()
         except Exception as e:
+            traceback.print_exc()
             raise CommandError(f'Initalization failed due to error: {e}')
 
 

@@ -1,4 +1,4 @@
-from datetime import time, timedelta, datetime
+from datetime import date, time, timedelta, datetime
 
 from django.db.models.expressions import Case
 from majorizer.models import *
@@ -82,10 +82,12 @@ def get_prereqs(course):
 
 
 def add_course_to_schedule(course_offering, schedule):
+    print(course_offering)
     schedule.courses.add(course_offering)
 
 
 def remove_course_from_schedule(course_offering, schedule):
+    print(course_offering)
     schedule.courses.remove(course_offering)
 
 
@@ -163,37 +165,37 @@ def new_parse(file):
     with open(file, "r") as f:
         r = csv.DictReader(f)
         for line in r:
-            time = line.get("times")
+            t = line.get("times")
             days = []
-            if time == "N/A" or time.lower() == "transfer":
-                time = -1
-                end_time = begin_time = time
+            if t == "N/A" or t.lower() == "transfer":
+                t = 0
+                finish_time = begin_time = time(0)
             else:
-                time_data = time.split(" ")
-                days = [day_map.get(i) for i in time_data[1]]
-                time = time_data[2]
-                time_array = list(filter(None, time.split("-")))
-                begin_time = time_array[0]
-                end_time = time_array[1]
+                time_data = t.split(" ")
+                days = ",".join([str(day_map.get(i)) for i in time_data[1]])
+                t = time_data[2]
+                time_array = list(filter(None, t.split("-")))
+                begin_time = datetime.strptime(time_array[0], "%H:%M").time()
+                finish_time = datetime.strptime(time_array[1], "%H:%M").time()
 
-        prereqs = line.get("prerequisites")
-        prereqs = filter(None, prereqs.split(';'))
+            prereqs = line.get("prerequisites")
+            prereqs = filter(None, prereqs.split(';'))
 
-        course, _ = DBCourse.get_or_create(name = line.get("name"), course_number = line.get("course_number"))
-        course.save()
+            course, _ = DBCourse.objects.get_or_create(name = line.get("name"), course_number = line.get("course_number"))
+            course.save()
 
-        course_offering, _ = DBCourseOffering.objects.get_or_create(
-            term = line.get("term"),
-            instructor = line.get("instructor"),
-            start_time = begin_time,
-            end_time = end_time,
-            days = days,
-            room = line.get("room"),
-            section_num = 1,
-            course_id = course
-        )
+            course_offering, _ = DBCourseOffering.objects.get_or_create(
+                term = line.get("term"),
+                instructor = line.get("instructor"),
+                start_time = begin_time,
+                end_time = finish_time,
+                days = days,
+                room = line.get("room"),
+                section_num = 1,
+                course_id = course
+            )
 
-        course_offering.save()
+            course_offering.save()
 
 
 
