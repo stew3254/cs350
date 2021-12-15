@@ -39,10 +39,11 @@ def schedule_to_timeslots(schedule, timeslots):
         # This section populates the timeslots with courses from the schedule
         for index, timeslot in enumerate(timeslots):
             for day in days:
-                if (timeslot.time == start):
+                if timeslot.time == start:
                     timeslot.classes[int(day)] = (course.course_id.name, course.id)
-                elif (timeslots[index - 1].classes[int(day)][0] == course.course_id.name and timeslot.time <= end):
+                elif timeslots[index - 1].classes[int(day)][0] == course.course_id.name and timeslot.time <= end:
                     timeslot.classes[int(day)] = (course.course_id.name, course.id)
+
         # This section calculates the correct rowspan for the html table elements (Currently doesn't work for schedules with more than one class)
         # for index, timeslot in enumerate(timeslots):
         #     for day in days:
@@ -152,6 +153,7 @@ Course Number   Course Name   Times   Term   Replacements   Prerequisites   Prof
 0               1             2       3      4              5               6           7      8
 '''
 
+
 def new_parse(file):
     day_map = {
         "M": 0,
@@ -183,23 +185,22 @@ def new_parse(file):
             prereqs = list(filter(lambda a: a != "N/A", prereqs))
             existing_prereqs = DBCourse.objects.filter(course_number__in=prereqs)
 
-            course, _ = DBCourse.objects.get_or_create(name = line.get("name"), course_number = line.get("course_number"))
+            course, _ = DBCourse.objects.get_or_create(name=line.get("name"), course_number=line.get("course_number"))
             course.save()
             course.prereqs.add(*existing_prereqs)
 
             course_offering, _ = DBCourseOffering.objects.get_or_create(
-                term = line.get("term"),
-                instructor = line.get("instructor"),
-                start_time = begin_time,
-                end_time = finish_time,
-                days = days,
-                room = line.get("room"),
-                section_num = 1,
-                course_id = course
+                term=line.get("term"),
+                instructor=line.get("instructor"),
+                start_time=begin_time,
+                end_time=finish_time,
+                days=days,
+                room=line.get("room"),
+                section_num=1,
+                course_id=course
             )
 
             course_offering.save()
-
 
 
 def parse(file):
@@ -232,7 +233,7 @@ def parse(file):
             time_array = filter(None, time.split("-"))
             begin_time = datetime.strptime(time_array[0], "%H:%M")
             end_time = datetime.strptime(time_array[1], "%H:%M")
-        
+
         prereqs = item.iloc(5)
         prereqs = filter(None, prereqs.split(';'))
 
@@ -243,7 +244,9 @@ def parse(file):
         course = DBCourse(course_id=-1, name=item.iloc(1), course_number=item.iloc(0))
         course.save()
 
-        course_offering = DBCourseOffering(term=item.iloc(3), instructor=item.iloc(6), start_time=begin_time, end_time=end_time, days=days, room=item.iloc(7), section_num = 1, course_id=course)
+        course_offering = DBCourseOffering(term=item.iloc(3), instructor=item.iloc(6), start_time=begin_time,
+                                           end_time=end_time, days=days, room=item.iloc(7), section_num=1,
+                                           course_id=course)
         course_offering.save()
         program.save()
         program.courses.add(course_offering)

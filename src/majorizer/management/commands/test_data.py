@@ -1,7 +1,7 @@
 import json
 
 from majorizer.models import *
-from majorizer.util import parse, new_parse
+from majorizer.util import parse, new_parse, create_user
 from datetime import time
 
 import traceback
@@ -31,6 +31,14 @@ def test_data():
     test_course.prereqs.add(test_course2)
     test_course.prereqs.add(test_course3)
 
+    test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Major", is_major=True, department_id=test_department)
+    test_degree.courses.add(test_course)
+
+    test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Minor", is_major=False, department_id=test_department)
+    test_degree.courses.add(test_course)
+
+    create_user("Test", "test", "test", "Spring", "2026", test_degree)
+
     test_offering, _ = DBCourseOffering.objects.get_or_create(term="F21", instructor="Professor McTeacherson", start_time=time(11),
                                             end_time=time(12, 30), days="0,2,4", room="bathroom", section_num=1,
                                             course_id=test_course)
@@ -41,12 +49,6 @@ def test_data():
                                             end_time=time(15, 30), days="1,3", room="bathroom", section_num=1,
                                             course_id=test_course2)
 
-    test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Major", is_major=True, department_id=test_department)
-    test_degree.courses.add(test_course)
-
-    test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Minor", is_major=False, department_id=test_department)
-    test_degree.courses.add(test_course)
-
     #test_student, _ = DBStudent.objects.get_or_create(name="Test Student", grad_term="F2023")
     #test_student.degrees.add(test_degree)
 
@@ -55,8 +57,6 @@ def test_data():
 
 
 def import_data(name=None):
-    if name is None:
-        test_data()
-    else:
-        # parse(name)
+    test_data()
+    if name is not None:
         new_parse(name)

@@ -24,7 +24,7 @@ class DBCourseOffering(models.Model):
     instructor = models.CharField(max_length=64)
     start_time = models.TimeField()
     end_time = models.TimeField()
-    days = CharField(max_length=16)  # Comma separated list
+    days = CharField(max_length=16, null=True)  # Comma separated list
     room = models.CharField(max_length=128)
     section_num = models.SmallIntegerField()
     course_id = models.ForeignKey(DBCourse, models.DO_NOTHING)
