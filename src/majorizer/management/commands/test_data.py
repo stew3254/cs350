@@ -37,6 +37,11 @@ def test_data():
     cs_degree.courses.add(*(DBCourse.objects.filter(course_number__in=core_cs_classes)))
     #cs_degree.courses.add(*cs_electives)
 
+    cheme_degree, _ = DBDegreeProgram.objects.get_or_create(name="Chemical Engineering", is_major=True, department_id=cs_department)
+    core_cheme_classes = ["CH210", "CH220", "CH260", "CH320", "CH330", "CH350", "CH360", "CH370", "CH410", "CH420", "CH460"]
+    cheme_degree.courses.add(*(DBCourse.objects.filter(course_number__in=core_cheme_classes)))
+
+
     test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Major", is_major=True, department_id=cs_department)
     test_degree.courses.add(test_course)
 

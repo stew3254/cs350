@@ -139,23 +139,25 @@ def validate_prerequisites_met(course, student, active_schedule):
 
     return output
 
-def validate_core_classes_met(student, degree_program):
+def validate_core_classes_met(student):
     schedules = DBSchedule.objects.filter(student_id=student)
 
     courses_taken = []
     output = []
+
+    degrees = student.degrees.all()
 
     for s in schedules:
         courses = s.courses.all()
         for c in courses:
             courses_taken.append(c.course_id.course_id)
 
-    degree = DBDegreeProgram.objects.get(pk=degree_program)
-    degree_courses = degree.courses.all()
-    core_classes_not_met = degree_courses.exclude(course_id__in=courses_taken)
+    for d in degrees:
+        degree_courses = d.courses.all()
+        core_classes_not_met = degree_courses.exclude(course_id__in=courses_taken)
 
-    for c in core_classes_not_met:
-        output.append(f"Required class not taken: {c.course_number}")
+        for c in core_classes_not_met:
+            output.append(f"Required class not taken: {c.course_number}")
 
     return output
 

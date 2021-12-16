@@ -212,7 +212,7 @@ def profile_view(request):
     context_dict['degrees'] = degrees
     context_dict['schedules'] = schedules
     if logged_in:
-        context_dict['unmet_required_classes'] = validate_core_classes_met(student, degrees.first().id)
+        context_dict['unmet_required_classes'] = validate_core_classes_met(student)
 
     return render(request, "profile.html", context_dict)
 
