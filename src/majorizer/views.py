@@ -192,12 +192,18 @@ def register_view(request):
 def profile_view(request):
     logged_in = request.user.is_authenticated
 
+    student = None
+    degrees = None
+    schedules = None
+
     if logged_in:
         django_user = request.user
         majorizer_user = DBUser.objects.get(user=django_user)
         student = majorizer_user.student_id
         degrees = student.degrees.all()
         schedules = DBSchedule.objects.filter(student_id=student)
+        for s in schedules:
+            validate_schedule_credits(s)
 
     context_dict = {}
     context_dict['current_page'] = 'profile'
@@ -205,6 +211,8 @@ def profile_view(request):
     context_dict['student'] = student
     context_dict['degrees'] = degrees
     context_dict['schedules'] = schedules
+    if logged_in:
+        context_dict['unmet_required_classes'] = validate_core_classes_met(student, degrees.first().id)
 
     return render(request, "profile.html", context_dict)
 

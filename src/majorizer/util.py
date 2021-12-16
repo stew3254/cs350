@@ -94,11 +94,21 @@ def remove_course_from_schedule(course_offering, schedule):
 
 def validate_new_schedule(new_schedule_name, new_schedule_semester, new_schedule_year, student):
     output = []
+
+    s = DBStudent.objects.get(pk=student.pk)
+    grad_term = s.grad_term
+    grad_semester = grad_term[:1]
+    grad_year = int(grad_term[1:])
+
     existing_schedules = DBSchedule.objects.filter(student_id=student)
     if existing_schedules.filter(name=new_schedule_name):
         output.append("You already have a schedule with this name!")
     if existing_schedules.filter(is_fall_semester=new_schedule_semester).filter(year=new_schedule_year):
         output.append("You already have a schedule for this term!")
+    if int(new_schedule_year) > grad_year:
+        output.append("You are graduating before this term!")
+    elif new_schedule_year == grad_year and grad_semester == 'S' and new_schedule_semester:
+        output.append("You are graduating before this term!")
 
     return output
 
@@ -116,7 +126,7 @@ def validate_prerequisites_met(course, student, active_schedule):
     if current_is_fall:
         schedules = DBSchedule.objects.filter(student_id=student).filter(year__lt=current_year)
     else:
-        schedules = DBSchedule.objects.filter(student_id=student).filter(year__lt=current_year).filter(is_fall=True)
+        schedules = DBSchedule.objects.filter(student_id=student).filter(year__lt=current_year).filter(is_fall_semester=True)
 
     for s in schedules:
         courses = s.courses.all()
@@ -129,6 +139,33 @@ def validate_prerequisites_met(course, student, active_schedule):
 
     return output
 
+def validate_core_classes_met(student, degree_program):
+    schedules = DBSchedule.objects.filter(student_id=student)
+
+    courses_taken = []
+    output = []
+
+    for s in schedules:
+        courses = s.courses.all()
+        for c in courses:
+            courses_taken.append(c.course_id.course_id)
+
+    degree = DBDegreeProgram.objects.get(pk=degree_program)
+    degree_courses = degree.courses.all()
+    core_classes_not_met = degree_courses.exclude(course_id__in=courses_taken)
+
+    for c in core_classes_not_met:
+        output.append(f"Required class not taken: {c.course_number}")
+
+    return output
+
+def validate_schedule_credits(schedule):
+    courses = schedule.courses.all()
+    if courses.count() >= 4:
+        schedule.is_valid = True
+    else:
+        schedule.is_valid = False
+    schedule.save()
 
 def create_user(full_name, uname, pword, grad_semester, grad_year, degree_programs):
     new_user = User.objects.create_user(first_name=full_name, username=uname, password=pword)

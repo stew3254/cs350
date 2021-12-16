@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
 
 def test_data():
-    test_department, _ = DBDepartment.objects.get_or_create(name="Test Department")
+    cs_department, _ = DBDepartment.objects.get_or_create(name="Computer Science")
 
     test_course, _ = DBCourse.objects.get_or_create(course_id=1234, name="Test Course", course_number="TEST1234")
     test_course2, _ = DBCourse.objects.get_or_create(course_id=4321, name="Test Course 2", course_number="TEST4321")
@@ -31,13 +31,19 @@ def test_data():
     test_course.prereqs.add(test_course2)
     test_course.prereqs.add(test_course3)
 
-    test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Major", is_major=True, department_id=test_department)
+    cs_degree, _ = DBDegreeProgram.objects.get_or_create(name="Computer Science", is_major=True, department_id=cs_department)
+    core_cs_classes = ["CS141", "CS142", "CS241", "CS242", "CS341", "CS344", "CS345", "CS350", "CS444"]
+    #cs_electives = DBCourse.objects.exclude(course_number__in=core_cs_classes)
+    cs_degree.courses.add(*(DBCourse.objects.filter(course_number__in=core_cs_classes)))
+    #cs_degree.courses.add(*cs_electives)
+
+    test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Major", is_major=True, department_id=cs_department)
     test_degree.courses.add(test_course)
 
-    test_degree, _ = DBDegreeProgram.objects.get_or_create(name="Test Minor", is_major=False, department_id=test_department)
+    test_degree2, _ = DBDegreeProgram.objects.get_or_create(name="Test Minor", is_major=False, department_id=cs_department)
     test_degree.courses.add(test_course)
 
-    create_user("Test", "test", "test", "Spring", "2026", test_degree)
+    #create_user("Test", "test", "test", "Sp", "2026", test_degree.id)
 
     test_offering, _ = DBCourseOffering.objects.get_or_create(term="F21", instructor="Professor McTeacherson", start_time=time(11),
                                             end_time=time(12, 30), days="0,2,4", room="bathroom", section_num=1,

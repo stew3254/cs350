@@ -60,6 +60,17 @@
                             {% endif %}
                         </div>
                     </div>
+                    <br>
+                    {% if unmet_required_classes %}
+                        <div class="card" style="background-color: rgb(108, 122, 122);">
+                            <div style="background-color: rgb(243, 6, 6); padding: 8px;">Missing Required Classes</div>
+                            <div style="padding: 8px;">
+                                {% for c in unmet_required_classes %}
+                                    <p>{{ c }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
